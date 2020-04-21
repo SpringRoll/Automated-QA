@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint index.js",
+    "lint": "eslint --fix *.js",
     "test": "karma start karma.conf.js",
     "start": "node index.js"
   },
