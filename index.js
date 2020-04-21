@@ -5,15 +5,8 @@ const packageJson = require('./package.json');
 const path = require('path');
 const { program } = require('commander');
 
+const expandPath = require('./lib/expand-path.js');
 const gameServer = require('./lib/game-server.js');
-
-const expandPath = (rawPath) => {
-  // first, replace any home directory
-  const noTilde = rawPath.replace(/~/, process.env.HOME);
-
-  // Now, just resolve the path
-  return path.resolve(noTilde);
-};
 
 const validatePath = (providedPath) => {
   const fullGamePath = expandPath(providedPath);
@@ -40,7 +33,7 @@ program.parse(process.argv);
 validatePath(program.path);
 
 console.log('Starting game server...');
-gameServer.start(expandPath(program.path)).then(() => {
+gameServer.start(program.path).then(() => {
   const duration = 10000;
   console.log(`Server up for ${duration}ms...`);
   setTimeout(() => {
