@@ -5,7 +5,7 @@ const packageJson = require('./package.json');
 const path = require('path');
 const { program } = require('commander');
 
-const gameServer = require('./game-server.js');
+const gameServer = require('./lib/game-server.js');
 
 const expandPath = (rawPath) => {
   // first, replace any home directory
