@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-const packageJson = require('./package.json');
+const packageJson = require('../package.json');
 const { program } = require('commander');
 
-const validateGamePath = require('./lib/validate-game-path.js');
-const runner = require('./lib/runner.js');
+const validateGamePath = require('../lib/validate-game-path.js');
+const runner = require('../lib/runner.js');
 
 program.version(packageJson.version);
 program
