@@ -19,7 +19,9 @@
     "karma-cli": "^2.0.0",
     "karma-mocha": "^2.0.0",
     "karma-mocha-reporter": "^2.2.5",
-    "mocha": "^7.1.1"
+    "karma-webpack": "^4.0.2",
+    "mocha": "^7.1.1",
+    "webpack": "^4.42.1"
   },
   "devDependencies": {
     "@pbs/eslint-config-pbs-kids": "^1.0.2",

@@ -27,8 +27,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      // 'tests/*.js' : ['webpack'],
-      // 'tests/**/*.js' : ['webpack']
+      'tests.js': ['webpack']
     },
 
     // webpack configuration. For test debugging, DON'T minify output!
@@ -37,18 +36,6 @@ module.exports = function(config) {
         minimize: false
       },
       module: {
-        rules: [
-          {
-            test: /\.m?js$/,
-            exclude: /node_modules/,
-            use: {
-              loader: 'babel-loader',
-              options: {
-                presets: ['@babel/preset-env']
-              }
-            }
-          }
-        ]
       }
     },
 
