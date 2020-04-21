@@ -4,7 +4,7 @@ const packageJson = require('./package.json');
 const { program } = require('commander');
 
 const validateGamePath = require('./lib/validate-game-path.js');
-const gameServer = require('./lib/game-server.js');
+const runner = require('./lib/runner.js');
 
 program.version(packageJson.version);
 program
@@ -15,11 +15,14 @@ program.parse(process.argv);
 
 validateGamePath(program.path);
 
-console.log('Starting game server...');
-gameServer.start(program.path).then(() => {
-  const duration = 10000;
-  console.log(`Server up for ${duration}ms...`);
-  setTimeout(() => {
-    gameServer.stop();
-  }, duration);
-});
+console.log('About to run tests');
+runner
+  .runTests(program.path)
+  .then(() => {
+    console.log('Done!');
+    process.exit(0);
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
