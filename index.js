@@ -19,9 +19,9 @@ const validatePath = (providedPath) => {
 
   if (!fs.existsSync(fullGamePath)) {
     console.error(`The path ${providedPath} (resolved to ${fullGamePath}) was not found`);
-  } else if(!fs.statSync(fullGamePath).isDirectory()) {
+  } else if (!fs.statSync(fullGamePath).isDirectory()) {
     console.error(`The path ${providedPath} (resolved to ${fullGamePath}) is not a directory`);
-  } else if(!fs.existsSync(indexHtmlPath) || !fs.statSync(indexHtmlPath).isFile()) {
+  } else if (!fs.existsSync(indexHtmlPath) || !fs.statSync(indexHtmlPath).isFile()) {
     console.error(`The path ${providedPath} (resolved to ${fullGamePath}) did not contain an index.html`);
   } else {
     console.log(`${providedPath} valid`);
@@ -31,7 +31,7 @@ const validatePath = (providedPath) => {
 program.version(packageJson.version);
 program
   .requiredOption('-s, --slug <slug>', 'The game slug to use when reporting test results')
-  .requiredOption('-p, --path <path>', 'The path to the deploy folder of the game'); 
+  .requiredOption('-p, --path <path>', 'The path to the deploy folder of the game');
 
 program.parse(process.argv);
 
