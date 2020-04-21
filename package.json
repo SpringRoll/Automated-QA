@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "ac": "bin/ac"
+  },
   "scripts": {
     "lint": "eslint --fix *.js lib/*.js",
     "test": "karma start karma.conf.js",
