@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 
-const { GAME_SERVER_PORT } = require('./lib/constants.js');
+const { GAME_SERVER_PORT, REQUIRED_FEATURES } = require('./lib/constants.js');
 
 describe('test suite', () => {
   let iframe;
@@ -28,14 +28,7 @@ describe('test suite', () => {
     document.body.removeChild(iframe);
   });
 
-  const requiredFeatures = [
-    'sound',
-    'vo',
-    'sfx',
-    'music',
-  ];
-
-  for (const featureName of requiredFeatures) {
+  for (const featureName of REQUIRED_FEATURES) {
     it(`should support ${featureName}`, async () => {
       expect(features[featureName]).to.equal(true);
     });
