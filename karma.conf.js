@@ -7,17 +7,9 @@ module.exports = function(config) {
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
 
-    plugins: [
-      'karma-mocha',
-      'karma-mocha-reporter',
-      'karma-webpack',
-      'karma-chrome-launcher',
-    ],
-
-
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: [ 'mocha' ],
+    frameworks: ['mocha'],
 
 
     // list of files / patterns to load in the browser
@@ -35,23 +27,21 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'tests.js': [ 'webpack' ],
+      'tests.js' : ['webpack'],
     },
 
     // webpack configuration. For test debugging, DON'T minify output!
     webpack: {
       optimization: {
-        minimize: false,
-      },
-      module: {
-      },
+        minimize: false
+      }
     },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: [ 'mocha' ],
+    reporters: ['mocha'],
 
 
     // web server port
@@ -73,7 +63,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: [ 'Chrome' ],
+    browsers: ['FirefoxHeadless'],
 
 
     // Continuous Integration mode
@@ -82,6 +72,6 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity,
-  });
-};
+    concurrency: Infinity
+  })
+}
