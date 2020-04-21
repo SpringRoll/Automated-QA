@@ -6,22 +6,8 @@ const path = require('path');
 const { program } = require('commander');
 
 const expandPath = require('./lib/expand-path.js');
+const validateGamePath = require('./lib/validate-game-path.js');
 const gameServer = require('./lib/game-server.js');
-
-const validatePath = (providedPath) => {
-  const fullGamePath = expandPath(providedPath);
-  const indexHtmlPath = path.join(fullGamePath, 'index.html');
-
-  if (!fs.existsSync(fullGamePath)) {
-    console.error(`The path ${providedPath} (resolved to ${fullGamePath}) was not found`);
-  } else if (!fs.statSync(fullGamePath).isDirectory()) {
-    console.error(`The path ${providedPath} (resolved to ${fullGamePath}) is not a directory`);
-  } else if (!fs.existsSync(indexHtmlPath) || !fs.statSync(indexHtmlPath).isFile()) {
-    console.error(`The path ${providedPath} (resolved to ${fullGamePath}) did not contain an index.html`);
-  } else {
-    console.log(`${providedPath} valid`);
-  }
-};
 
 program.version(packageJson.version);
 program
@@ -30,7 +16,7 @@ program
 
 program.parse(process.argv);
 
-validatePath(program.path);
+validateGamePath(program.path);
 
 console.log('Starting game server...');
 gameServer.start(program.path).then(() => {
