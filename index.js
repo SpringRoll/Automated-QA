@@ -18,9 +18,15 @@ validateGamePath(program.path);
 console.log('About to run tests');
 runner
   .runTests(program.path)
-  .then(() => {
-    console.log('Done!');
-    process.exit(0);
+  .then((testResults) => {
+    if (testResults.lastResult.failed > 0) {
+      const failedCount = testResults.lastResult.failed;
+      console.log(`${failedCount} test${failedCount > 1 ? 's' : ''} failed!`);
+      process.exit(3);
+    } else {
+      console.log('Done!');
+      process.exit(0);
+    }
   })
   .catch((e) => {
     console.error(e);
