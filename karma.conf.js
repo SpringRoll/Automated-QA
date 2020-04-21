@@ -14,7 +14,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'node_modules/bellhop-iframe/dist/bellhop.umd.js',
+      'node_modules/bellhop-iframe/dist/bellhop-umd.js',
       'tests.js',
     ],
 
