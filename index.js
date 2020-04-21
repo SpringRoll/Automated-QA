@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
 const packageJson = require('./package.json');
-const path = require('path');
 const { program } = require('commander');
 
-const expandPath = require('./lib/expand-path.js');
 const validateGamePath = require('./lib/validate-game-path.js');
 const gameServer = require('./lib/game-server.js');
 
