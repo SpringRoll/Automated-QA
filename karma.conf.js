@@ -9,6 +9,7 @@ module.exports = function(config) {
     
     plugins: [
       'karma-mocha',
+      'karma-mocha-reporter',
       'karma-webpack',
       'karma-chrome-launcher',
     ],
