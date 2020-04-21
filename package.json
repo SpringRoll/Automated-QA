@@ -24,6 +24,7 @@
     "karma-mocha-reporter": "2.2.5",
     "karma-webpack": "3.0.0",
     "mocha": "5.2.0",
+    "springroll-container": "^1.1.3",
     "webpack": "4.16.5"
   },
   "devDependencies": {
