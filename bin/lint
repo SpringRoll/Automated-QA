@@ -9,7 +9,8 @@ const pad = require('../lib/pad.js');
 
 program.version(packageJson.version);
 program
-  .requiredOption('-p --path <path>', 'The path the root directory of the game');
+  .requiredOption('-p --path <path>', 'The path the root directory of the game')
+  .option('-c --exit-code <number>', 'The exit code to use when failing', '3');
 
 program.parse(process.argv);
 
@@ -25,8 +26,7 @@ const cliEngine = new eslint.CLIEngine({
 
 const report = cliEngine.executeOnFiles(['src/']);
 
-// TODO: Fetch this error code from SSM
-const exitCode = report.errorCount === 0 ? 0 : 3;
+const exitCode = report.errorCount === 0 ? 0 : program.exitCode;
 
 for (const record of report.results) {
   if (record.errorCount === 0) {

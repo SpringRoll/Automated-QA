@@ -8,7 +8,8 @@ const runner = require('../lib/runner.js');
 
 program.version(packageJson.version);
 program
-  .requiredOption('-p, --path <path>', 'The path to the deploy folder of the game');
+  .requiredOption('-p, --path <path>', 'The path to the deploy folder of the game')
+  .option('-c --exit-code <number>', 'The exit code to use when failing', '3');
 
 program.parse(process.argv);
 
@@ -21,7 +22,7 @@ runner
     if (testResults.lastResult.failed > 0) {
       const failedCount = testResults.lastResult.failed;
       console.log(`${failedCount} test${failedCount > 1 ? 's' : ''} failed!`);
-      process.exit(3);
+      process.exit(program.exitCode);
     } else {
       console.log('Done!');
       process.exit(0);
@@ -29,5 +30,5 @@ runner
   })
   .catch((e) => {
     console.error(e);
-    process.exit(1);
+    process.exit(program.exitCode);
   });
