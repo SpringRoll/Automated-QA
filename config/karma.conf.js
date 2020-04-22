@@ -16,7 +16,7 @@ module.exports = function(config) {
     files: [
       '../node_modules/bellhop-iframe/dist/bellhop-umd.js',
       '../node_modules/springroll-container/dist/container.js',
-      'tests.js',
+      '../tests/tests.js',
     ],
 
 
@@ -28,7 +28,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'tests.js': [ 'webpack' ],
+      '../tests/tests.js': [ 'webpack' ],
     },
 
     // webpack configuration. For test debugging, DON'T minify output!
