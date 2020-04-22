@@ -9,7 +9,6 @@
   },
   "scripts": {
     "lint": "eslint --fix *.js lib/*.js",
-    "test": "karma start karma.conf.js",
     "start": "node index.js"
   },
   "keywords": [],
