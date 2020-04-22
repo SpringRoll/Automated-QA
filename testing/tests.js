@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 
-const { GAME_SERVER_PORT, REQUIRED_FEATURES } = require('./lib/constants.js');
+const { GAME_SERVER_PORT, REQUIRED_FEATURES } = require('../lib/constants.js');
 
 describe('test suite', () => {
   let iframe;
