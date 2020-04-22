@@ -19,12 +19,12 @@ const configFullPath = path.resolve(__dirname, '../config/eslint.json');
 const cliEngine = new eslint.CLIEngine({
   configFile: configFullPath,
   cwd: gameFullPath,
-  extensions: [".js", ".ts"],
+  extensions: [ '.js', '.ts' ],
   ignorePattern: [],
   useEslintrc: false,
 });
 
-const report = cliEngine.executeOnFiles(['src/']);
+const report = cliEngine.executeOnFiles([ 'src/' ]);
 
 const exitCode = report.errorCount === 0 ? 0 : program.exitCode;
 
