@@ -17,7 +17,7 @@
     "no-implied-eval": 2,
     "no-global-assign": 2,
     "no-script-url": 2,
-    "no-unused-vars": 2,
+    "@typescript-eslint/no-unused-vars": 2,
     "no-use-before-define": 2,
     "getter-return": 2,
     "no-constant-condition": 2,
