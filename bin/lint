@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+const path = require('path');
+const eslint = require('eslint');
+const pad = require('../lib/pad.js');
+
+const configFullPath = path.resolve(__dirname, '../config/eslint.json');
+const cliEngine = new eslint.CLIEngine({
+  configFile: configFullPath,
+  cwd: '/Users/cbell/git/springroll/games/air-show/',
+  extensions: [".js", ".ts"],
+  ignorePattern: [],
+  useEslintrc: false,
+});
+
+const report = cliEngine.executeOnFiles(['src/']);
+
+// TODO: Fetch this error code from SSM
+const exitCode = report.errorCount === 0 ? 0 : 3;
+
+for (const record of report.results) {
+  if (record.errorCount === 0) {
+    continue;
+  }
+
+  console.error(`${record.filePath}`);
+  for (const message of record.messages) {
+    // /path/to/file
+    // 11:15  error  A space is required after '['                array-bracket-spacing
+    const lineNumber = pad.left(`${message.line}`, 4, ' ');
+    const column = pad.right(`${message.column}`, 4, ' ');
+    const rule = pad.left(`${message.ruleId}`, 25, ' ');
+    const paddedMessage = pad.left(`${message.message}`, 50, ' ');
+    console.log(`${lineNumber}:${column} ${rule} ${paddedMessage}`);
+  }
+}
+
+process.exit(exitCode);
