@@ -26,7 +26,7 @@ const configFullPath = path.resolve(__dirname, '../config/eslint.json');
 const cliEngine = new eslint.CLIEngine({
   configFile: configFullPath,
   extensions: [ '.js', '.ts' ],
-  ignorePattern: [],
+  ignorePattern: ['assets'],
   useEslintrc: false,
 });
 
