@@ -1,3 +1,4 @@
+/* global springroll */
 const { expect } = require('chai');
 
 const { GAME_SERVER_PORT, REQUIRED_FEATURES } = require('../lib/constants.js');
