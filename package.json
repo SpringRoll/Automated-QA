@@ -8,7 +8,7 @@
     "srlint": "bin/srlint"
   },
   "scripts": {
-    "lint": "eslint --fix *.js lib/*.js",
+    "lint": "eslint --fix bin/* config/*.js lib/*.js tests/*.js",
     "start": "node index.js"
   },
   "keywords": [],
