@@ -35,8 +35,6 @@ for (const record of report.results) {
 
   console.error(`${record.filePath}`);
   for (const message of record.messages) {
-    // /path/to/file
-    // 11:15  error  A space is required after '['                array-bracket-spacing
     const lineNumber = pad.left(`${message.line}`, 4, ' ');
     const column = pad.right(`${message.column}`, 4, ' ');
     const rule = pad.left(`${message.ruleId}`, 25, ' ');
