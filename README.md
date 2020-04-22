@@ -34,7 +34,7 @@ npx srlint
 ### Accessibility Checking
 A typical accessibility check would look like this:
 ```
-npx srac -p path/to/the/game
+npx srac -p path/to/the/game/deploy
 ```
 
 This will start a test server in `path/to/the/game/deploy` and a headless Firefox runner to check for a handful of game
@@ -43,7 +43,7 @@ Note that an optional `-c` option can be provided to set the status code upon er
 For instance:
 
 ```
-npx srac -p path/to/the/game -c 123
+npx srac -p path/to/the/game/deploy -c 123
 ```
 
 will make the accessibility checker fail with status code 123 if the test suite fails.
@@ -54,13 +54,13 @@ A typical linting pass would look like this:
 npx srlint -p path/to/the/game
 ```
 
-This will start at the root of the game, look for a `src` directory and crawl it looking for non-asset JavaScript and TypeScript files.
+This will start at the root of the passed directory, and crawl it looking for non-asset JavaScript and TypeScript files.
 
 Note that an optional `-c` option can be provided to set the status code upon error.
 For instance:
 
 ```
-npx srlint -p path/to/the/game/ -c 123
+npx srlint -p path/to/the/game/src/ -c 123
 ```
 
 will make the linter fail with status code 123 if a code style issue is found.

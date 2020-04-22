@@ -3,18 +3,18 @@
 const packageJson = require('../package.json');
 const { program } = require('commander');
 
-const { hasDeployFolder } = require('../lib/path-validation.js');
+const { isDirectory } = require('../lib/path-validation.js');
 const runner = require('../lib/runner.js');
 
 program.version(packageJson.version);
 program
-  .requiredOption('-p, --path <path>', 'The path to the deploy folder of the game')
+  .requiredOption('-p, --path <path>', 'The path to the build/deploy folder of the game')
   .option('-c --exit-code <number>', 'The exit code to use when failing', '3');
 
 program.parse(process.argv);
 
-if (!hasDeployFolder(program.path)) {
-  console.error('No deploy folder found in', program.path);
+if (!isDirectory(program.path)) {
+  console.error(`Folder ${program.path} doesn't exist`);
   process.exit(program.exitCode);
 }
 

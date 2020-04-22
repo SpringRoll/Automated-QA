@@ -5,16 +5,23 @@ const eslint = require('eslint');
 const packageJson = require('../package.json');
 const { program } = require('commander');
 const expandPath = require('../lib/expand-path.js');
+const { isDirectory } = require('../lib/path-validation.js');
 const pad = require('../lib/pad.js');
 
 program.version(packageJson.version);
 program
-  .requiredOption('-p --path <path>', 'The path the root directory of the game')
+  .requiredOption('-p --path <path>', 'The path the root directory from which to begin linting')
   .option('-c --exit-code <number>', 'The exit code to use when failing', '3');
 
 program.parse(process.argv);
 
 const gameFullPath = expandPath(program.path);
+
+if (!isDirectory(gameFullPath)) {
+  console.warn(`Folder ${program.path} (resolved to ${gameFullPath} doesn't exist). Skipping`);
+  process.exit(0);
+}
+
 const configFullPath = path.resolve(__dirname, '../config/eslint.json');
 const cliEngine = new eslint.CLIEngine({
   configFile: configFullPath,
@@ -24,7 +31,7 @@ const cliEngine = new eslint.CLIEngine({
   useEslintrc: false,
 });
 
-const report = cliEngine.executeOnFiles([ 'src/' ]);
+const report = cliEngine.executeOnFiles([ '.' ]);
 
 const exitCode = report.errorCount === 0 ? 0 : program.exitCode;
 
