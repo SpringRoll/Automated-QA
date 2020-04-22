@@ -34,15 +34,16 @@ npx srlint
 ### Accessibility Checking
 A typical accessibility check would look like this:
 ```
-npx srac -p path/to/the/game/deploy
+npx srac -p path/to/the/game
 ```
 
-This will start a headless Firefox runner and check for a handful of game features to be present.
+This will start a test server in `path/to/the/game/deploy` and a headless Firefox runner to check for a handful of game
+features to be present.
 Note that an optional `-c` option can be provided to set the status code upon error.
 For instance:
 
 ```
-npx srac -p path/to/the/game/deploy -c 123
+npx srac -p path/to/the/game -c 123
 ```
 
 will make the accessibility checker fail with status code 123 if the test suite fails.
