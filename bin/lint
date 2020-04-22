@@ -2,12 +2,22 @@
 
 const path = require('path');
 const eslint = require('eslint');
+const packageJson = require('../package.json');
+const { program } = require('commander');
+const expandPath = require('../lib/expand-path.js');
 const pad = require('../lib/pad.js');
 
+program.version(packageJson.version);
+program
+  .requiredOption('-p --path <path>', 'The path the root directory of the game');
+
+program.parse(process.argv);
+
+const gameFullPath = expandPath(program.path);
 const configFullPath = path.resolve(__dirname, '../config/eslint.json');
 const cliEngine = new eslint.CLIEngine({
   configFile: configFullPath,
-  cwd: '/Users/cbell/git/springroll/games/air-show/',
+  cwd: gameFullPath,
   extensions: [".js", ".ts"],
   ignorePattern: [],
   useEslintrc: false,
