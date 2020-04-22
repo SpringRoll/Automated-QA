@@ -8,7 +8,6 @@ const runner = require('../lib/runner.js');
 
 program.version(packageJson.version);
 program
-  .requiredOption('-s, --slug <slug>', 'The game slug to use when reporting test results')
   .requiredOption('-p, --path <path>', 'The path to the deploy folder of the game');
 
 program.parse(process.argv);
