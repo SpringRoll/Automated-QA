@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "ac": "bin/ac"
+    "srac": "bin/srac",
+    "srlint": "bin/srlint"
   },
   "scripts": {
     "lint": "eslint --fix *.js lib/*.js",
