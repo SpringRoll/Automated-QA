@@ -3,7 +3,7 @@
 const packageJson = require('../package.json');
 const { program } = require('commander');
 
-const validateGamePath = require('../lib/validate-game-path.js');
+const { hasDeployFolder } = require('../lib/path-validation.js');
 const runner = require('../lib/runner.js');
 
 program.version(packageJson.version);
@@ -13,7 +13,10 @@ program
 
 program.parse(process.argv);
 
-validateGamePath(program.path);
+if (!hasDeployFolder(program.path)) {
+  console.error('No deploy folder found in', program.path);
+  process.exit(program.exitCode);
+}
 
 console.log('About to run tests');
 runner
