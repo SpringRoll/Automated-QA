@@ -23,12 +23,13 @@ if (!isDirectory(gameFullPath)) {
 }
 
 const configFullPath = path.resolve(__dirname, '../config/eslint.json');
-const cliEngine = new eslint.CLIEngine({
+const eslintOptions = {
   configFile: configFullPath,
   extensions: [ '.js', '.ts' ],
   ignorePattern: [],
   useEslintrc: false,
-});
+};
+const cliEngine = new eslint.CLIEngine(eslintOptions);
 
 const report = cliEngine.executeOnFiles([ gameFullPath ]);
 
