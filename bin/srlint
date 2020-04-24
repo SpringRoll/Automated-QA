@@ -6,6 +6,7 @@ const packageJson = require('../package.json');
 const { program } = require('commander');
 const expandPath = require('../lib/expand-path.js');
 const { isDirectory } = require('../lib/path-validation.js');
+const eslintignore = require('../lib/eslintignore.js');
 const pad = require('../lib/pad.js');
 
 program.version(packageJson.version);
@@ -23,15 +24,21 @@ if (!isDirectory(gameFullPath)) {
 }
 
 const configFullPath = path.resolve(__dirname, '../config/eslint.json');
+
+// resolve the list of files to lint
+const eslintIgnorePath = eslintignore.findEslintIgnore(gameFullPath);
+const filesToIgnore = eslintIgnorePath === null ? new Set() : eslintignore.expandEslintIgnore(eslintIgnorePath);
+const filesToLint = eslintignore.expandRootToNonIgnoredFiles(gameFullPath, filesToIgnore);
+
 const eslintOptions = {
   configFile: configFullPath,
   extensions: [ '.js', '.ts' ],
-  ignorePattern: [],
   useEslintrc: false,
 };
+
 const cliEngine = new eslint.CLIEngine(eslintOptions);
 
-const report = cliEngine.executeOnFiles([ gameFullPath ]);
+const report = cliEngine.executeOnFiles(filesToLint);
 
 const exitCode = report.errorCount === 0 ? 0 : program.exitCode;
 
