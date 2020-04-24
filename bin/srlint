@@ -35,8 +35,6 @@ const filesToIgnore = eslintIgnorePath === null ? new Set() : eslintignore.expan
 const filesToLint = eslintignore.expandRootToNonIgnoredFiles(gameFullPath, filesToIgnore);
 const report = cliEngine.executeOnFiles(filesToLint);
 
-const exitCode = report.errorCount === 0 ? 0 : program.exitCode;
-
 for (const record of report.results) {
   if (record.errorCount === 0) {
     continue;
@@ -52,4 +50,5 @@ for (const record of report.results) {
   }
 }
 
+const exitCode = report.errorCount === 0 ? 0 : program.exitCode;
 process.exit(exitCode);
