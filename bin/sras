@@ -1,0 +1,192 @@
+const packageJson = require('../package.json');
+const { program } = require('commander');
+
+const fs = require('fs');
+const promisify = require('util').promisify;
+const imageSize = require('image-size');
+
+const { isDirectory } = require('../lib/path-validation.js');
+
+const scanConfig = require('../config/srasConfig.json');
+const rules = scanConfig.rules || {};
+const imgRules = rules.images || {};
+const audRules = rules.audio || {};
+const requiredTypes = (
+    Object.keys(imgRules).filter(i => !!imgRules[i].require).concat(
+    Object.keys(audRules).filter(i => !!audRules[i].require))
+);
+const ignored = new RegExp((scanConfig.ignore || []).join('|'));
+const unpermitted = new RegExp((scanConfig.unpermitted || []).join('|'));
+
+let scannedFiles = 0;
+let skippedFiles = 0;
+let ignoredFiles = 0;
+
+const scannedTypes = {};
+const unpermittedTypes = {};
+const scanReports = [];
+
+const fsReadDir = promisify(fs.readdir);
+const fsStat = promisify(fs.stat);
+const sizeOf = promisify(imageSize);
+
+const getExtension = path => (/[.]/.exec(path)) ? /[^.]+$/.exec(path)[0] : undefined;
+const isPowerOfTwo = num => (num !== 0) && ((num & (num - 1)) === 0);
+const formatFileSize = size => {
+    const units = ["B", "KB", "MB", "GB", "TB"]
+    let i = 0;
+    for (; size >= 1024 && i < units.length; i++) {
+        size /= 1024;
+    }
+    return `${Math.round(size * 100) / 100} ${units[i]}`;
+};
+const fail = err => {
+    console.log("Scan failed:");
+    console.error(err);
+    process.exit(0);
+};
+
+program.version(packageJson);
+program
+    .requiredOption('-p --path <path>', 'The path to the deploy directory from which to begin scanning assets')
+    .option('-c --exit-code <number>', 'The exit code to use when failing', '3');
+
+program.parse(process.argv);
+
+if (!isDirectory(program.path)) {
+    fail(`Folder [path = ${program.path}] does not exist`);
+}
+
+console.log(`Scanning assets at [path = ${program.path}]`);
+
+const scanImage = async (path, scanRules) => {
+    try {
+        const stat = await fsStat(path);
+        const dimensions = await sizeOf(path);
+
+        const maxWidth = scanRules.maxWidth || Infinity;
+        const maxHeight = scanRules.maxHeight || Infinity;
+        const maxSize = scanRules.maxSize || Infinity;
+
+        const fileName = path.split("\\").pop();
+
+        if (dimensions.width > maxWidth || dimensions.height > maxHeight) {
+            scanReports.push(
+                `Image is larger than the recommended max dimensions [max = ${maxHeight}x${maxHeight}], [${fileName} = ${dimensions.width}x${dimensions.height}]`
+            );
+        }
+
+        if (!!scanRules.powerOfTwo && (!isPowerOfTwo(dimensions.width) || !isPowerOfTwo(dimensions.height))) {
+            scanReports.push(
+                `Image dimensions are recommended to be a powers of two [${fileName} = ${dimensions.width}x${dimensions.height}]`
+            );
+        }
+
+        if (maxSize > 0 && stat.size > maxSize) {
+            scanReports.push(
+                `Image file size is larger than the recommended file size [max = ${formatFileSize(maxSize)}], [${fileName} = ${formatFileSize(stat.size)}]`
+            );
+        }
+    }
+    catch (err) {
+        fail(err);
+    }
+};
+
+const scanAudio = async (path, scanRules) => {
+    try {
+        const stat = await fsStat(path);
+    }
+    catch (err) {
+        fail(err);
+    }
+};
+
+const scaneDirectory = async path => {
+    if (!isDirectory(path)) {
+        const ext = getExtension(path);
+
+        if (ignored.test(ext)) {
+            // Track total ignored files.
+            ignoredFiles++;
+            return;
+        }
+        else if (unpermitted.test(ext)) {
+            // Track how times we have scanned an this unpermitted file type.
+            unpermittedTypes[ext] = (unpermittedTypes[ext] || 0) + 1;
+            skippedFiles++; // skipped or ignored ??????
+            return;
+        }
+
+        // Check if there is a rule category for this file extension.
+        const hasImgRule = imgRules[ext] !== undefined;
+        const hasAudRule = !hasImgRule && audRules[ext] !== undefined;
+        
+        if (hasImgRule) {
+            await scanImage(path, imgRules[ext]);
+        }
+        else if (hasAudRule) {
+            await scanAudio(path, audRules[ext]);
+        }
+        else {
+            // Track total skipped files.
+            skippedFiles++;
+            return;
+        }
+
+        // Track how many times we have scanned this tile type.
+        scannedTypes[ext] = (scannedTypes[ext] || 0) + 1;
+
+        // Track total scanned files.
+        scannedFiles++;
+    }
+    else {
+        try {
+            const files = await fsReadDir(path);
+            for (let i = 0; i < files.length; i++) {
+                await scaneDirectory(`${path}\\${files[i]}`);
+            }
+        }
+        catch (err) {
+            fail(err);
+        }
+    }
+};
+
+const assetScan = async () => {
+    await scaneDirectory(program.path);
+
+    const counts = [];
+    const unpermittedReports = [];
+    const missingRequiredReports = [];
+
+    Object.keys(scannedTypes).forEach(i => counts.push(`${scannedTypes[i]} ${i}(s)`));
+    Object.keys(unpermittedTypes).forEach(i => unpermittedReports.push(
+        `Detected ${unpermittedTypes[i]} unpermitted file type(s) [type = ${i}]`
+    ));
+
+    requiredTypes.forEach(type => {
+        if (scannedTypes[type] === undefined) {
+            missingRequiredReports.push(`Could not find file types matching [type = ${type}]`);
+        }
+    });
+
+    // RENDER SCAN REPORTS
+
+    if (scanReports.length > 0) {
+        console.log(scanReports.join('\n'));
+    }
+    if (unpermittedReports.length > 0) {
+        console.log(unpermittedReports.join('\n'));
+    }
+    if (missingRequiredReports.length > 0) {
+        console.log(missingRequiredReports.join('\n'));
+    }
+    console.log(`Scan complete: ${scannedFiles} file(s) scanned, ${skippedFiles} file(s) skipped, ${ignoredFiles} file(s) ignored`);
+    console.log(`Scanned ${counts.join(', ')}`);
+
+    process.exit(0);
+};
+
+// Begin scanning
+assetScan();

@@ -1,0 +1,44 @@
+{
+    "ignore": [
+        "js",
+        "ts",
+        "css",
+        "html",
+        "json"
+    ],
+    "unpermitted": [
+        "wav"
+    ],
+    "rules": {
+        "images": {
+            "png": {
+                "maxSize": 1000000,
+                "allowed": true,
+                "require": false,
+                "powerOfTwo": false,
+                "maxWidth": 2048,
+                "maxHeight": 2048
+            },
+            "jpeg": {
+                "maxSize": 1000000,
+                "allowed": true,
+                "require": false,
+                "powerOfTwo": false,
+                "maxWidth": 2048,
+                "maxHeight": 2048
+            }
+        },
+        "audio": {
+            "mp3": {
+                "maxSize": -1,
+                "allowed": true,
+                "require": true
+            },
+            "ogg": {
+                "maxSize": -1,
+                "allowed": true,
+                "require": false
+            }
+        }
+    }
+}
