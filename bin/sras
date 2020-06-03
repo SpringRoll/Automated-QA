@@ -1,6 +1,7 @@
 const packageJson = require('../package.json');
 const { program } = require('commander');
 
+const path = require('path');
 const fs = require('fs');
 const promisify = require('util').promisify;
 const imageSize = require('image-size');
@@ -31,7 +32,7 @@ const fsReadDir = promisify(fs.readdir);
 const fsStat = promisify(fs.stat);
 const sizeOf = promisify(imageSize);
 
-const getExtension = path => (/[.]/.exec(path)) ? /[^.]+$/.exec(path)[0] : undefined;
+const getExtension = p => (/[.]/.exec(p)) ? /[^.]+$/.exec(p)[0] : undefined;
 const isPowerOfTwo = num => (num !== 0) && ((num & (num - 1)) === 0);
 const formatFileSize = size => {
     const units = ["B", "KB", "MB", "GB", "TB"]
@@ -80,16 +81,16 @@ if (!isDirectory(program.path)) {
 
 console.log(`Scanning assets at [path = ${program.path}]`);
 
-const scanImage = async (path, scanRules) => {
+const scanImage = async (filePath, scanRules) => {
     try {
-        const stat = await fsStat(path);
-        const dimensions = await sizeOf(path);
+        const stat = await fsStat(filePath);
+        const dimensions = await sizeOf(filePath);
 
         const maxWidth = scanRules.maxWidth || Infinity;
         const maxHeight = scanRules.maxHeight || Infinity;
         const maxSize = scanRules.maxSize || Infinity;
 
-        const fileName = path.split("\\").pop();
+        const fileName = filePath.split("\\").pop();
 
         if (dimensions.width > maxWidth || dimensions.height > maxHeight) {
             scanReports.push(
@@ -114,17 +115,17 @@ const scanImage = async (path, scanRules) => {
     }
 };
 
-const scanAudio = async (path, scanRules) => {
+const scanAudio = async (filePath, scanRules) => {
     try {
-        const stat = await fsStat(path);
-        const metadata = await musicMetadata.parseFile(path);
+        const stat = await fsStat(filePath);
+        const metadata = await musicMetadata.parseFile(filePath);
 
         const maxSize = scanRules.maxSize || 0;
         const maxChannels = scanRules.maxChannels || 0;
         const sampleRate = scanRules.sampleRate || 0;
         const duration = scanRules.duration || 0;
 
-        const fileName = path.split("\\").pop();
+        const fileName = filePath.split("\\").pop();
 
         if (maxSize > 0 && stat.size > maxSize) {
             scanReports.push(
@@ -156,9 +157,9 @@ const scanAudio = async (path, scanRules) => {
     }
 };
 
-const scaneDirectory = async path => {
-    if (!isDirectory(path)) {
-        const ext = getExtension(path);
+const scaneDirectory = async filePath => {
+    if (!isDirectory(filePath)) {
+        const ext = getExtension(filePath);
 
         if (ignored.test(ext)) {
             // Track total ignored files.
@@ -177,10 +178,10 @@ const scaneDirectory = async path => {
         const hasAudRule = !hasImgRule && audRules[ext] !== undefined;
         
         if (hasImgRule) {
-            await scanImage(path, imgRules[ext]);
+            await scanImage(filePath, imgRules[ext]);
         }
         else if (hasAudRule) {
-            await scanAudio(path, audRules[ext]);
+            await scanAudio(filePath, audRules[ext]);
         }
         else {
             // Cannot find rules for this file type so it will be skipped.
@@ -197,9 +198,9 @@ const scaneDirectory = async path => {
     }
     else {
         try {
-            const files = await fsReadDir(path);
+            const files = await fsReadDir(filePath);
             for (let i = 0; i < files.length; i++) {
-                await scaneDirectory(`${path}\\${files[i]}`);
+                await scaneDirectory(path.join(filePath, files[i]));
             }
         }
         catch (err) {
