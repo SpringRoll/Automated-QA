@@ -4,6 +4,7 @@ const { program } = require('commander');
 const fs = require('fs');
 const promisify = require('util').promisify;
 const imageSize = require('image-size');
+const musicMetadata = require('music-metadata');
 
 const { isDirectory } = require('../lib/path-validation.js');
 
@@ -40,6 +41,26 @@ const formatFileSize = size => {
     }
     return `${Math.round(size * 100) / 100} ${units[i]}`;
 };
+const formatTime = time => {
+    const milliseconds = time % 1000;
+    const seconds = Math.floor((time / 1000) % 60);
+    const minutes = Math.floor((time / (1000 * 60)) % 60);
+    const hours = Math.floor(time / (1000 * 60 * 60));
+
+    const formatted = [];
+    if (hours > 0) {
+        formatted.push(`${hours}h`);
+    }
+    if (minutes > 0) {
+        formatted.push(`${minutes}m`);
+    }
+    if (seconds > 0) {
+        formatted.push(`${seconds}s`);
+    }
+    formatted.push(`${milliseconds}ms`);
+
+    return formatted.join(' ');
+};
 const fail = err => {
     console.log("Scan failed:");
     console.error(err);
@@ -72,19 +93,19 @@ const scanImage = async (path, scanRules) => {
 
         if (dimensions.width > maxWidth || dimensions.height > maxHeight) {
             scanReports.push(
-                `Image is larger than the recommended max dimensions [max = ${maxHeight}x${maxHeight}], [${fileName} = ${dimensions.width}x${dimensions.height}]`
+                `Image is larger than the recommended max dimensions [recommended = ${maxHeight}x${maxHeight}], [${fileName} = ${dimensions.width}x${dimensions.height}]`
             );
         }
 
         if (!!scanRules.powerOfTwo && (!isPowerOfTwo(dimensions.width) || !isPowerOfTwo(dimensions.height))) {
             scanReports.push(
-                `Image dimensions are recommended to be a powers of two [${fileName} = ${dimensions.width}x${dimensions.height}]`
+                `Image dimensions are recommended to be powers of two [${fileName} = ${dimensions.width}x${dimensions.height}]`
             );
         }
 
         if (maxSize > 0 && stat.size > maxSize) {
             scanReports.push(
-                `Image file size is larger than the recommended file size [max = ${formatFileSize(maxSize)}], [${fileName} = ${formatFileSize(stat.size)}]`
+                `Image file size is larger than the recommended file size [recommended = ${formatFileSize(maxSize)}], [${fileName} = ${formatFileSize(stat.size)}]`
             );
         }
     }
@@ -96,6 +117,39 @@ const scanImage = async (path, scanRules) => {
 const scanAudio = async (path, scanRules) => {
     try {
         const stat = await fsStat(path);
+        const metadata = await musicMetadata.parseFile(path);
+
+        const maxSize = scanRules.maxSize || 0;
+        const maxChannels = scanRules.maxChannels || 0;
+        const sampleRate = scanRules.sampleRate || 0;
+        const duration = scanRules.duration || 0;
+
+        const fileName = path.split("\\").pop();
+
+        if (maxSize > 0 && stat.size > maxSize) {
+            scanReports.push(
+                `Audio file size is larger than the recommended file size [recommended = ${formatFileSize(maxSize)}], [${fileName} = ${formatFileSize(stat.size)}]`
+            );
+        }
+
+        if (maxChannels > 0 && metadata.format.numberOfChannels > maxChannels) {
+            scanReports.push(
+                `Audio file contains more than the recommended number of channels [recommended = ${maxChannels}], [${fileName} = ${metadata.format.numberOfChannels}]`
+            );
+        }
+
+        if (sampleRate > 0 && metadata.format.sampleRate !== sampleRate) {
+            scanReports.push(
+                `Audio smaple rate does not match the recommended sample rate [recommended = ${sampleRate}], [${fileName} = ${metadata.format.sampleRate}]`
+            );
+        }
+
+        const convertedDuration = metadata.format.duration * 1000; // S to MS
+        if (duration > 0 && convertedDuration > duration) {
+            scanReports.push(
+                `Audio smaple duration is larger than recommended duration [recommended = ${duration}], [${fileName} = ${convertedDuration}]`
+            );
+        }
     }
     catch (err) {
         fail(err);
@@ -129,12 +183,13 @@ const scaneDirectory = async path => {
             await scanAudio(path, audRules[ext]);
         }
         else {
+            // Cannot find rules for this file type so it will be skipped.
             // Track total skipped files.
             skippedFiles++;
             return;
         }
 
-        // Track how many times we have scanned this tile type.
+        // Track how many times we have scanned this file type.
         scannedTypes[ext] = (scannedTypes[ext] || 0) + 1;
 
         // Track total scanned files.
@@ -154,6 +209,8 @@ const scaneDirectory = async path => {
 };
 
 const assetScan = async () => {
+    const startTime = Date.now();
+
     await scaneDirectory(program.path);
 
     const counts = [];
@@ -182,8 +239,9 @@ const assetScan = async () => {
     if (missingRequiredReports.length > 0) {
         console.log(missingRequiredReports.join('\n'));
     }
-    console.log(`Scan complete: ${scannedFiles} file(s) scanned, ${skippedFiles} file(s) skipped, ${ignoredFiles} file(s) ignored`);
+
     console.log(`Scanned ${counts.join(', ')}`);
+    console.log(`Scan complete [time = ${formatTime(Date.now() - startTime)}]: ${scannedFiles} file(s) scanned, ${skippedFiles} file(s) skipped, ${ignoredFiles} file(s) ignored`);
 
     process.exit(0);
 };
