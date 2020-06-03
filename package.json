@@ -5,7 +5,8 @@
   "main": "index.js",
   "bin": {
     "srac": "bin/srac",
-    "srlint": "bin/srlint"
+    "srlint": "bin/srlint",
+    "sras": "bin/sras"
   },
   "scripts": {
     "lint": "eslint --fix bin/* config/*.js lib/*.js tests/*.js",
