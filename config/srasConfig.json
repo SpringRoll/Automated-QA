@@ -12,7 +12,7 @@
     "rules": {
         "images": {
             "png": {
-                "maxSize": 1000000,
+                "maxSize": 1048576,
                 "allowed": true,
                 "require": false,
                 "powerOfTwo": false,
@@ -20,7 +20,7 @@
                 "maxHeight": 2048
             },
             "jpeg": {
-                "maxSize": 1000000,
+                "maxSize": 1048576,
                 "allowed": true,
                 "require": false,
                 "powerOfTwo": false,
