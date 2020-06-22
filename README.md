@@ -4,7 +4,7 @@ This module provides a suite of tools for performing automated QA checks on Spri
 The tools currently consist of the following utilities:
 - `srac` - An [karma](https://karma-runner.github.io) test suite runner for checking accessibility in SpringRoll games.
 - `srlint` - An [eslint](https://eslint.org) style-checker for games.
-- `sras` - As asset scanner that will check 
+- `sras` - An asset scanner that will check assets within a game's deployment folder.
 
 ## Glossary
 - [SpringRoll](https://github.com/SpringRoll/SpringRoll) - a JavaScript framework for making accessible HTML5 games
@@ -68,11 +68,11 @@ npx srlint -p path/to/the/game/src/ -c 123
 will make the linter fail with status code 123 if a code style issue is found.
 
 ### Asset Scanner
-A typical linting pass would look like this:
+A typical asset scanning pass would look like this:
 ```
 npx sras -p path/to/the/deploy/folder --config path/to/scan/rules/config
 ```
-This script should be ran as a post build process and the path provided should be the deploy folder of the game.
+This script should be ran as a post build process and the path provided should be the root of the deploy folder of the game.
 
 Note: You must provide the scanner with a valid JSON `--config` file that outlines the rules for specific file types. If a file type is missing from the config, then the file will be ignored during the scan.
 
