@@ -7,6 +7,7 @@
         "json"
     ],
     "unpermitted": [
+        "map.js",
         "wav"
     ],
     "rules": {
