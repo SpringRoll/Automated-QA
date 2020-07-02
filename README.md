@@ -90,3 +90,7 @@ The main runner for tests `lib/runner.js` spawns two processes:
 - An ExpressJS app on port 3000 for serving the game content in an iframe
 - A Karma server on port 9876 for interacting with Firefox
 I've seen the karma process start but never actually run tests, and I think this just due to general flakiness.
+
+We're using _old versions_ of karma and related tools (based on the version in the Learning Analytics Client as of version `5.6.3`).
+For some reason, I couldn't get the newer versions to work properly and had to revert to old versions.
+Be mindful of this when reading the associated documentation for karma, mocha, and other tools.
