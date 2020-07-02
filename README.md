@@ -22,7 +22,7 @@ The only external dependency of this library is [Firefox](https://www.mozilla.or
 
 Lastly, you'll need `node` installed (version 10 is preferrable) and `npm`. You then install this via:
 ```
-npm i SOMETHING
+npm i springroll-automated-qa
 ```
 
 After installation two commands should be available to you via `npx`:
