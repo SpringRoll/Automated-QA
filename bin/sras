@@ -141,14 +141,14 @@ const scanDirectory = async (filePath) => {
   if (!isDirectory(filePath)) {
     const ext = path.extname(filePath).slice(1);
 
-    if (scanConfig.ignored.test(filePath)) {
-      // Track total ignored files.
-      ignoredFiles++;
-      return;
-    } else if (scanConfig.unpermitted.test(filePath)) {
+    if (scanConfig.unpermitted.test(filePath)) {
       // Track how times we have scanned an this unpermitted file type.
       unpermittedTypes[ext] = (unpermittedTypes[ext] || 0) + 1;
       skippedFiles++; // skipped or ignored ??????
+      return;
+    } else if (scanConfig.ignored.test(filePath)) {
+      // Track total ignored files.
+      ignoredFiles++;
       return;
     }
 
