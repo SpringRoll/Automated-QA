@@ -1,15 +1,11 @@
 {
-    "ignore": [
-        "js",
-        "ts",
-        "css",
-        "html",
-        "json"
-    ],
     "unpermitted": [
         "wav"
     ],
     "rules": {
+        "js": {
+            "maxSize": 1048576
+        },
         "images": {
             "png": {
                 "maxSize": 1048576,
