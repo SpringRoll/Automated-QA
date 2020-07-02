@@ -143,7 +143,8 @@ const scanDirectory = async (filePath) => {
 
     if (scanConfig.unpermitted.test(filePath)) {
       // Track how times we have scanned an this unpermitted file type.
-      unpermittedTypes[ext] = (unpermittedTypes[ext] || 0) + 1;
+      const fullExtension = scanConfig.unpermitted.exec(filePath)[0];
+      unpermittedTypes[fullExtension] = (unpermittedTypes[fullExtension] || 0) + 1;
       scanReports.push(buildReportMsg(`${filePath} is not permitted`));
       return;
     } else if (scanConfig.ignored.test(filePath)) {
