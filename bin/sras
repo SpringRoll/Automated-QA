@@ -55,10 +55,11 @@ const scanJs = async (filePath, scanRules) => {
     const stat = await fsStat(filePath);
     const maxSize = scanRules.maxSize || Infinity;
     if (maxSize > 0 && stat.size > maxSize) {
+      const fileName = path.basename(filePath);
       scanReports.push(buildReportMsg(
         'JS file size is larger than the recommended file size',
         `[recommended = ${formatHRTFileSize(maxSize)}],`,
-        `[${filePath} = ${formatHRTFileSize(stat.size)}]`,
+        `[${fileName} = ${formatHRTFileSize(stat.size)}]`,
       ));
     }
   } catch (e) {
