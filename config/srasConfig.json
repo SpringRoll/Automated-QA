@@ -2,6 +2,10 @@
     "unpermitted": [
         "wav"
     ],
+    "ignore": [
+      "html",
+      "css"
+    ],
     "rules": {
         "js": {
             "maxSize": 1048576
