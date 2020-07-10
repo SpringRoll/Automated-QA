@@ -50,6 +50,23 @@ const scanConfig = parseSRASConfig(config);
 
 console.log(`Scanning assets at [path = ${program.path}]`);
 
+const scanJs = async (filePath, scanRules) => {
+  try {
+    const stat = await fsStat(filePath);
+    const maxSize = scanRules.maxSize || Infinity;
+    if (maxSize > 0 && stat.size > maxSize) {
+      const fileName = path.basename(filePath);
+      scanReports.push(buildReportMsg(
+        'JS file size is larger than the recommended file size',
+        `[recommended = ${formatHRTFileSize(maxSize)}],`,
+        `[${fileName} = ${formatHRTFileSize(stat.size)}]`,
+      ));
+    }
+  } catch (e) {
+    fail(e);
+  }
+};
+
 const scanImage = async (filePath, scanRules) => {
   try {
     const stat = await fsStat(filePath);
@@ -153,10 +170,13 @@ const scanDirectory = async (filePath) => {
     }
 
     // Check if there is a rule category for this file extension.
+    const hasJsRule = scanConfig.codeRules && scanConfig.codeRules.js && ext === 'js';
     const hasImgRule = scanConfig.imgRules[ext] !== undefined;
     const hasAudRule = !hasImgRule && scanConfig.audRules[ext] !== undefined;
 
-    if (hasImgRule) {
+    if (hasJsRule) {
+      await scanJs(filePath, scanConfig.codeRules.js);
+    } else if (hasImgRule) {
       await scanImage(filePath, scanConfig.imgRules[ext]);
     } else if (hasAudRule) {
       await scanAudio(filePath, scanConfig.audRules[ext]);
