@@ -170,12 +170,12 @@ const scanDirectory = async (filePath) => {
     }
 
     // Check if there is a rule category for this file extension.
-    const hasJsRule = scanConfig.jsRules && ext === 'js';
+    const hasJsRule = scanConfig.codeRules && scanConfig.codeRules.js && ext === 'js';
     const hasImgRule = scanConfig.imgRules[ext] !== undefined;
     const hasAudRule = !hasImgRule && scanConfig.audRules[ext] !== undefined;
 
     if (hasJsRule) {
-      await scanJs(filePath, scanConfig.jsRules);
+      await scanJs(filePath, scanConfig.codeRules.js);
     } else if (hasImgRule) {
       await scanImage(filePath, scanConfig.imgRules[ext]);
     } else if (hasAudRule) {

@@ -7,8 +7,10 @@
       "css"
     ],
     "rules": {
-        "js": {
-            "maxSize": 1048576
+        "code" : {
+            "js": {
+                "maxSize": 1048576
+            }
         },
         "images": {
             "png": {
