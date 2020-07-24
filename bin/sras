@@ -1,0 +1,250 @@
+#!/usr/bin/env node
+
+const packageJson = require('../package.json');
+const { program } = require('commander');
+
+const path = require('path');
+const fs = require('fs');
+const promisify = require('util').promisify;
+const imageSize = require('image-size');
+const musicMetadata = require('music-metadata');
+
+const { isDirectory } = require('../lib/path-validation.js');
+const { formatHRTFileSize, formatMsToHRT } = require('../lib/format.js');
+const { parseSRASConfig } = require('../lib/srasConfig.js');
+const { isPowerOfTwo } = require('../lib/mathHelpers.js');
+
+let scannedFiles = 0;
+let skippedFiles = 0;
+let ignoredFiles = 0;
+
+const scannedTypes = {};
+const unpermittedTypes = {};
+const scanReports = [];
+
+const fsReadDir = promisify(fs.readdir);
+const fsStat = promisify(fs.stat);
+const sizeOf = promisify(imageSize);
+
+const buildReportMsg = (...segments) => segments.join(' ');
+const fail = (err) => {
+  console.log('Scan failed:');
+  console.error(err);
+  process.exit(program.exitCode);
+};
+
+program.version(packageJson);
+program
+  .requiredOption('-p --path <path>', 'The path to the deploy directory from which to begin scanning assets')
+  .requiredOption('--config <config>', 'The config file containing the asset scanning rules')
+  .option('-c --exit-code <number>', 'The exit code to use when failing', '3');
+
+program.parse(process.argv);
+
+if (!isDirectory(program.path)) {
+  fail(`Folder [path = ${program.path}] does not exist`);
+}
+
+const config = JSON.parse(fs.readFileSync(program.config));
+const scanConfig = parseSRASConfig(config);
+
+const scanJs = async (filePath, scanRules) => {
+  try {
+    const stat = await fsStat(filePath);
+    const maxSize = scanRules.maxSize || Infinity;
+    if (maxSize > 0 && stat.size > maxSize) {
+      const fileName = path.basename(filePath);
+      scanReports.push(buildReportMsg(
+        'JS file size is larger than the recommended file size',
+        `[recommended = ${formatHRTFileSize(maxSize)}],`,
+        `[${fileName} = ${formatHRTFileSize(stat.size)}]`,
+      ));
+    }
+  } catch (e) {
+    fail(e);
+  }
+};
+
+const scanImage = async (filePath, scanRules) => {
+  try {
+    const stat = await fsStat(filePath);
+    const dimensions = await sizeOf(filePath);
+
+    const maxWidth = scanRules.maxWidth || Infinity;
+    const maxHeight = scanRules.maxHeight || Infinity;
+    const maxSize = scanRules.maxSize || Infinity;
+
+    const fileName = filePath.split('\\').pop();
+
+    if (dimensions.width > maxWidth || dimensions.height > maxHeight) {
+      scanReports.push(buildReportMsg(
+        'Image is larger than the recommended max dimensions',
+        `[recommended = ${maxHeight}x${maxHeight}],`,
+        `[${fileName} = ${dimensions.width}x${dimensions.height}]`,
+      ));
+    }
+
+    if (!!scanRules.powerOfTwo && (!isPowerOfTwo(dimensions.width) || !isPowerOfTwo(dimensions.height))) {
+      scanReports.push(buildReportMsg(
+        'Image dimensions are recommended to be powers of two',
+        `[${fileName} = ${dimensions.width}x${dimensions.height}]`,
+      ));
+    }
+
+    if (maxSize > 0 && stat.size > maxSize) {
+      scanReports.push(buildReportMsg(
+        'Image file size is larger than the recommended file size',
+        `[recommended = ${formatHRTFileSize(maxSize)}],`,
+        `[${fileName} = ${formatHRTFileSize(stat.size)}]`,
+      ));
+    }
+  } catch (err) {
+    fail(err);
+  }
+};
+
+const scanAudio = async (filePath, scanRules) => {
+  try {
+    const stat = await fsStat(filePath);
+    const metadata = await musicMetadata.parseFile(filePath);
+
+    const maxSize = scanRules.maxSize || 0;
+    const maxChannels = scanRules.maxChannels || 0;
+    const sampleRate = scanRules.sampleRate || 0;
+    const duration = scanRules.duration || 0;
+
+    const fileName = filePath.split('\\').pop();
+
+    if (maxSize > 0 && stat.size > maxSize) {
+      scanReports.push(buildReportMsg(
+        'Audio file size is larger than the recommended file size',
+        `[recommended = ${maxSize}],`,
+        `[${fileName} = ${formatHRTFileSize(stat.size)}]`,
+      ));
+    }
+
+    if (maxChannels > 0 && metadata.format.numberOfChannels > maxChannels) {
+      scanReports.push(buildReportMsg(
+        'Audio file contains more than the recommended number of channels',
+        `[recommended = ${maxChannels}],`,
+        `[${fileName} = ${metadata.format.numberOfChannels}]`,
+      ));
+    }
+
+    if (sampleRate > 0 && metadata.format.sampleRate !== sampleRate) {
+      scanReports.push(buildReportMsg(
+        'Audio sample rate does not match the recommended sample rate',
+        `[recommended = ${sampleRate}],`,
+        `[${fileName} = ${metadata.format.sampleRate}]`,
+      ));
+    }
+
+    const convertedDuration = metadata.format.duration * 1000; // S to MS
+    if (duration > 0 && convertedDuration > duration) {
+      scanReports.push(buildReportMsg(
+        'Audio duration is larger than recommended duration',
+        `[recommended = ${duration}],`,
+        `[${fileName} = ${convertedDuration}]`,
+      ));
+    }
+  } catch (err) {
+    fail(err);
+  }
+};
+
+const scanDirectory = async (filePath) => {
+  if (!isDirectory(filePath)) {
+    const ext = path.extname(filePath).slice(1);
+
+    if (scanConfig.ignored.test(ext)) {
+      // Track total ignored files.
+      ignoredFiles++;
+      return;
+    } else if (scanConfig.unpermitted.test(ext)) {
+      // Track how times we have scanned an this unpermitted file type.
+      unpermittedTypes[ext] = (unpermittedTypes[ext] || 0) + 1;
+      skippedFiles++; // skipped or ignored ??????
+      return;
+    }
+
+    // Check if there is a rule category for this file extension.
+    const hasJsRule = scanConfig.codeRules && scanConfig.codeRules.js && ext === 'js';
+    const hasImgRule = scanConfig.imgRules[ext] !== undefined;
+    const hasAudRule = !hasImgRule && scanConfig.audRules[ext] !== undefined;
+
+    if (hasJsRule) {
+      await scanJs(filePath, scanConfig.codeRules.js);
+    } else if (hasImgRule) {
+      await scanImage(filePath, scanConfig.imgRules[ext]);
+    } else if (hasAudRule) {
+      await scanAudio(filePath, scanConfig.audRules[ext]);
+    } else {
+      // Cannot find rules for this file type so it will be skipped.
+      // Track total skipped files.
+      skippedFiles++;
+      return;
+    }
+
+    // Track how many times we have scanned this file type.
+    scannedTypes[ext] = (scannedTypes[ext] || 0) + 1;
+
+    // Track total scanned files.
+    scannedFiles++;
+  } else {
+    try {
+      const files = await fsReadDir(filePath);
+      for (let i = 0; i < files.length; i++) {
+        await scanDirectory(path.join(filePath, files[i]));
+      }
+    } catch (err) {
+      fail(err);
+    }
+  }
+};
+
+const assetScan = async () => {
+  const startTime = Date.now();
+
+  console.log(`Scanning assets at [path = ${program.path}]`);
+
+  await scanDirectory(program.path);
+
+  const counts = [];
+  const unpermittedReports = [];
+  const missingRequiredReports = [];
+
+  Object.keys(scannedTypes).forEach((i) => counts.push(`${scannedTypes[i]} ${i}(s)`));
+  Object.keys(unpermittedTypes).forEach((i) => unpermittedReports.push(
+    `Detected ${unpermittedTypes[i]} unpermitted file type(s) [type = ${i}]`,
+  ));
+
+  scanConfig.requiredTypes.forEach((type) => {
+    if (scannedTypes[type] === undefined) {
+      missingRequiredReports.push(`Could not find file types matching [type = ${type}]`);
+    }
+  });
+
+  // RENDER SCAN REPORTS
+
+  if (scanReports.length > 0) {
+    console.log(scanReports.join('\n'));
+  }
+  if (unpermittedReports.length > 0) {
+    console.log(unpermittedReports.join('\n'));
+  }
+  if (missingRequiredReports.length > 0) {
+    console.log(missingRequiredReports.join('\n'));
+  }
+  if (counts.length > 0) {
+    console.log(`Scanned ${counts.join(', ')}`);
+  }
+  console.log(
+    `Scan complete [time = ${formatMsToHRT(Date.now() - startTime)}]:`,
+    `${scannedFiles} file(s) scanned, ${skippedFiles} file(s) skipped, ${ignoredFiles} file(s) ignored`,
+  );
+
+  process.exit(program.exitCode);
+};
+
+// Begin scanning
+assetScan();

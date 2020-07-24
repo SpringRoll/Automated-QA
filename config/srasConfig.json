@@ -1,0 +1,46 @@
+{
+    "unpermitted": [
+        "wav",
+        "map"
+    ],
+    "ignore": [
+      "html",
+      "css",
+      "ogg"
+    ],
+    "rules": {
+        "code" : {
+            "js": {
+                "maxSize": 1048576
+            }
+        },
+        "images": {
+            "png": {
+                "maxSize": 1048576,
+                "allowed": true,
+                "require": false,
+                "powerOfTwo": false,
+                "maxWidth": 2048,
+                "maxHeight": 2048
+            },
+            "jpeg": {
+                "maxSize": 1048576,
+                "allowed": true,
+                "require": false,
+                "powerOfTwo": false,
+                "maxWidth": 2048,
+                "maxHeight": 2048
+            }
+        },
+        "audio": {
+            "mp3": {
+                "maxSize": 1048576,
+                "allowed": true,
+                "require": true,
+                "maxChannels": 1,
+                "sampleRate": -1,
+                "duration": -1
+            }
+        }
+    }
+}
