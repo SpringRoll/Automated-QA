@@ -1,10 +1,12 @@
 {
     "unpermitted": [
-        "wav"
+        "wav",
+        "map"
     ],
     "ignore": [
       "html",
-      "css"
+      "css",
+      "ogg"
     ],
     "rules": {
         "code" : {
@@ -32,17 +34,9 @@
         },
         "audio": {
             "mp3": {
-                "maxSize": -1,
+                "maxSize": 1048576,
                 "allowed": true,
                 "require": true,
-                "maxChannels": 1,
-                "sampleRate": -1,
-                "duration": -1
-            },
-            "ogg": {
-                "maxSize": -1,
-                "allowed": true,
-                "require": false,
                 "maxChannels": 1,
                 "sampleRate": -1,
                 "duration": -1
