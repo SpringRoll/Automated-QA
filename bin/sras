@@ -48,8 +48,6 @@ if (!isDirectory(program.path)) {
 const config = JSON.parse(fs.readFileSync(program.config));
 const scanConfig = parseSRASConfig(config);
 
-console.log(`Scanning assets at [path = ${program.path}]`);
-
 const scanJs = async (filePath, scanRules) => {
   try {
     const stat = await fsStat(filePath);
@@ -206,6 +204,8 @@ const scanDirectory = async (filePath) => {
 
 const assetScan = async () => {
   const startTime = Date.now();
+
+  console.log(`Scanning assets at [path = ${program.path}]`);
 
   await scanDirectory(program.path);
 
