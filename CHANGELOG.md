@@ -15,3 +15,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SpringRoll accessibility checker utility which uses [karma](https://karma-runner.github.io/4.0/index.html)
   for in-browser checking
 - SpringRoll linter utility which uses [eslint](https://eslint.org/) to perform automated style-checking
+- SpringRoll asset checker utility which enables quality control checks for assets in a SpringRoll game.
