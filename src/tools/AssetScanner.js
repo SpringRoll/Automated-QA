@@ -40,7 +40,7 @@ const scanReports = [];
  *
  * @param {*} filePath Path to the file being scanned
  * @param {*} scanRules A set of rules used in the scan
- * @return {void}
+ * @return {Promise} A promise that will resolve once the scan is complete
  */
 async function scanJs(filePath, scanRules) {
   try {
@@ -63,7 +63,7 @@ async function scanJs(filePath, scanRules) {
  *
  * @param {*} filePath Path to the file being scanned
  * @param {*} scanRules A set of rules used in the scan
- * @return {void}
+ * @return {Promise} A promise that will resolve once the scan is complete
  */
 async function scanImage(filePath, scanRules) {
   try {
@@ -107,7 +107,7 @@ async function scanImage(filePath, scanRules) {
  *
  * @param {*} filePath Path to the file being scanned
  * @param {*} scanRules A set of rules used in the scan
- * @return {void}
+ * @return {Promise} A promise that will resolve once the scan is complete
  */
 async function scanAudio(filePath, scanRules) {
   try {
@@ -161,15 +161,15 @@ async function scanAudio(filePath, scanRules) {
 /**
  *
  * @param {*} filePath The path to scan
- * @return {void}
+ * @return {Promise} A promise that will resolve once the scan is complete
  */
 async function scanDirectory(filePath) {
   if (isDirectory(filePath)) {
     try {
       const files = await fsReadDir(filePath);
-      for (let i = 0; i < files.length; i++) {
-        await scanDirectory(path.join(filePath, files[i]));
-      }
+      const dirScans = files.map((file) => scanDirectory(path.join(filePath, file)));
+
+      await Promise.all(dirScans);
     } catch (err) {
       return Promise.reject(err);
     }
