@@ -261,12 +261,12 @@ function scan(path, options, logResults = false) {
       }
 
       results.reports.push(
-        `Scan complete [time = ${formatMsToHRT(results.time.duration)}]:`,
         [
-          `${results.files.scanned} file(s) scanned`,
-          `${results.files.skipped} file(s) skipped`,
+          `Scan complete [time = ${formatMsToHRT(results.time.duration)}]:`,
+          `${results.files.scanned} file(s) scanned,`,
+          `${results.files.skipped} file(s) skipped,`,
           `${results.files.ignored} file(s) ignored`,
-        ].join(', '),
+        ].join(' '),
       );
 
       if (logResults && results.reports.length > 0) {
