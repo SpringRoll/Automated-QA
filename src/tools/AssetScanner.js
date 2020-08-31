@@ -30,11 +30,12 @@ const resultDefaults = {
   reports: [],
 };
 
-let results;
-let scanConfig;
 const scannedTypes = {};
 const unpermittedTypes = {};
 const scanReports = [];
+
+let results;
+let scanConfig;
 
 /**
  *
@@ -248,13 +249,13 @@ function scan(path, options, logResults = false) {
       });
 
       if (scanReports.length > 0) {
-        results.reports = results.reports.concat(...scanReports);
+        results.reports = results.reports.concat(scanReports);
       }
       if (unpermittedReports.length > 0) {
-        results.reports = results.reports.concat(...unpermittedReports);
+        results.reports = results.reports.concat(unpermittedReports);
       }
       if (missingRequiredReports.length > 0) {
-        results.reports = results.reports.concat(...missingRequiredReports);
+        results.reports = results.reports.concat(missingRequiredReports);
       }
       if (counts.length > 0) {
         results.reports.push(`Scanned ${counts.join(', ')}`);
