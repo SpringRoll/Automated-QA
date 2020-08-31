@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const eslint = require('eslint');
 const packageJson = require('../package.json');
 const { program } = require('commander');
-const expandPath = require('../lib/expand-path.js');
-const { isDirectory } = require('../lib/path-validation.js');
-const eslintignore = require('../lib/eslintignore.js');
-const pad = require('../lib/pad.js');
+const expandPath = require('../src/lib/expand-path.js');
+const { isDirectory } = require('../src/lib/path-validation.js');
+const fileLinter = require('../src/tools/FileLinter');
 
 program.version(packageJson.version);
 program
@@ -23,32 +21,18 @@ if (!isDirectory(gameFullPath)) {
   process.exit(0);
 }
 
-const cliEngine = new eslint.CLIEngine({
+const lintConfig = {
   configFile: path.resolve(__dirname, '../config/eslint.json'),
   extensions: [ '.js', '.ts' ],
   useEslintrc: false,
-});
-
-// resolve the list of files and lint them
-const eslintIgnorePath = eslintignore.findEslintIgnore(gameFullPath);
-const filesToIgnore = eslintIgnorePath === null ? new Set() : eslintignore.expandEslintIgnore(eslintIgnorePath);
-const filesToLint = eslintignore.expandRootToNonIgnoredFiles(gameFullPath, filesToIgnore);
-const report = cliEngine.executeOnFiles(filesToLint);
-
-for (const record of report.results) {
-  if (record.errorCount === 0) {
-    continue;
-  }
-
-  console.error(`${record.filePath}`);
-  for (const message of record.messages) {
-    const lineNumber = pad.left(`${message.line}`, 4, ' ');
-    const column = pad.right(`${message.column}`, 4, ' ');
-    const rule = pad.left(`${message.ruleId}`, 25, ' ');
-    const paddedMessage = pad.left(`${message.message}`, 50, ' ');
-    console.log(`${lineNumber}:${column} ${rule} ${paddedMessage}`);
-  }
 }
 
-const exitCode = report.errorCount === 0 ? 0 : program.exitCode;
-process.exit(exitCode);
+fileLinter.run(gameFullPath, lintConfig, true).then(() => {
+  // LINT SUCCESS
+
+  process.exit();
+}).catch(results => {
+  // LINT FAIL
+
+  process.exit(program.exitCode);
+});
