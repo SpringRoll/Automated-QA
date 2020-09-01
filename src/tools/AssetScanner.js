@@ -15,7 +15,7 @@ const fsStat = promisify(fs.stat);
 const sizeOf = promisify(imageSize);
 
 /**
- * 
+ *
  * @class AssetScanner
  */
 class AssetScanner {
@@ -39,7 +39,6 @@ class AssetScanner {
       },
       reports: [],
     };
-
   }
 
   /**
