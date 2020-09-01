@@ -15,11 +15,10 @@ const resultDefaults = {
 let results;
 
 /**
- *
- * @param {string} path
- * @param {*} config
- * @param {boolean} [logResults=false]
- * @returns
+ * @param {string} path The root path begin the scan in
+ * @param {*} config A set of options for scanning
+ * @param {boolean} [logResults=true] Whether or not to log the result to the console
+ * @return {Promise} A promise that will resolve once the scan is complete
  */
 function run(path, config, logResults = false) {
   return new Promise((resolve, reject) => {
@@ -56,8 +55,7 @@ function run(path, config, logResults = false) {
 
     if (report.errorCount === 0) {
       resolve(results);
-    }
-    else {
+    } else {
       reject(results);
     }
   });

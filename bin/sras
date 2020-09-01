@@ -28,11 +28,7 @@ if (!isDirectory(program.path)) {
 
 const config = JSON.parse(fs.readFileSync(program.config));
 assetScanner.scan(program.path, config, true).then(() => {
-  // SCAN SUCCESS
-
   process.exit();
 }).catch((err) => {
-  // SCAN FAIL
-
   fail(err);
 });
