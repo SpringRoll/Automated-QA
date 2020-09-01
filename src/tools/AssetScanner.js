@@ -215,7 +215,6 @@ async function scanDirectory(filePath) {
 }
 
 /**
- *
  * @param {string} path The root path begin the scan in
  * @param {*} options A set of options for scanning
  * @param {boolean} [logResults=true] Whether or not to log the result to the console

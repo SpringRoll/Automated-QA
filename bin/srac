@@ -2,9 +2,9 @@
 
 const packageJson = require('../package.json');
 const { program } = require('commander');
+const { isDirectory } = require('../src/lib/path-validation.js');
 
-const { isDirectory } = require('../lib/path-validation.js');
-const runner = require('../lib/runner.js');
+const accessibilityChecker = require('../src').accessibilityChecker;
 
 program.version(packageJson.version);
 program
@@ -18,20 +18,8 @@ if (!isDirectory(program.path)) {
   process.exit(program.exitCode);
 }
 
-console.log('About to run tests');
-runner
-  .runTests(program.path)
-  .then((testResults) => {
-    if (testResults.lastResult.failed > 0) {
-      const failedCount = testResults.lastResult.failed;
-      console.log(`${failedCount} test${failedCount > 1 ? 's' : ''} failed!`);
-      process.exit(program.exitCode);
-    } else {
-      console.log('Done!');
-      process.exit(0);
-    }
-  })
-  .catch((e) => {
-    console.error(e);
-    process.exit(program.exitCode);
-  });
+accessibilityChecker.run(program.path, true).then(() => {
+  process.exit();
+}).catch(() => {
+  process.exit(program.exitCode);
+});
