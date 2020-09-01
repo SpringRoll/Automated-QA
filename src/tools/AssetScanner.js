@@ -217,7 +217,7 @@ async function scanDirectory(filePath) {
 /**
  * @param {string} path The root path begin the scan in
  * @param {*} options A set of options for scanning
- * @param {boolean} [logResults=true] Whether or not to log the result to the console
+ * @param {boolean} [logResults=false] Whether or not to log the result to the console
  * @return {Promise} A promise that will resolve once the scan is complete
  */
 function scan(path, options, logResults = false) {
