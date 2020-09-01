@@ -15,7 +15,6 @@ const findEslintIgnore = (startingPath) => {
   while (currentDirectory !== '/') {
     console.log(currentDirectory);
     const eslintIgnorePath = path.join(currentDirectory, '.eslintignore');
-
     // if this file exists, we found it
     if (isFile(eslintIgnorePath)) {
       return eslintIgnorePath;
