@@ -1,4 +1,4 @@
-# SpringRoll Checker
+# SpringRoll Automated QA Tools
 This module provides a suite of tools for performing automated QA checks on SpringRoll games.
 
 The tools currently consist of the following utilities:
