@@ -2,7 +2,7 @@ const expandPath = require('./expand-path');
 const fs = require('fs');
 const glob = require('glob');
 const path = require('path');
-const { isFile } = require('../lib/path-validation.js');
+const { isFile } = require('./path-validation.js');
 
 /**
  * Crawls upward from a path, looking for an .eslintignore file
@@ -17,6 +17,10 @@ const findEslintIgnore = (startingPath) => {
     // if this file exists, we found it
     if (isFile(eslintIgnorePath)) {
       return eslintIgnorePath;
+    }
+
+    if (currentDirectory === path.dirname(currentDirectory)) {
+      return null;
     }
 
     // Go back a directory and look there

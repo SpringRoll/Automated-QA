@@ -53,7 +53,7 @@ will make the accessibility checker fail with status code 123 if the test suite 
 ### Linting Pass
 A typical linting pass would look like this:
 ```
-npx srlint -p path/to/the/game
+npx srlint -p path/to/the/game/src
 ```
 
 This will start at the root of the passed directory, and crawl it looking for non-asset JavaScript and TypeScript files.
