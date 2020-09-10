@@ -1,7 +1,7 @@
 {
-  "name": "accessibility-linter",
-  "version": "1.0.0",
-  "description": "",
+  "name": "springroll-automated-qa",
+  "version": "1.0.2",
+  "description": "An automated QA tool for SpringRoll games",
   "main": "index.js",
   "bin": {
     "srac": "bin/srac",
