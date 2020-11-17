@@ -4,9 +4,9 @@
         "map"
     ],
     "ignore": [
-      "html",
-      "css",
-      "ogg"
+        "html",
+        "css",
+        "ogg"
     ],
     "rules": {
         "code" : {
@@ -39,7 +39,8 @@
                 "require": false,
                 "maxChannels": 1,
                 "sampleRate": -1,
-                "duration": -1
+                "duration": -1,
+                "maxLoudness": -16
             }
         }
     }

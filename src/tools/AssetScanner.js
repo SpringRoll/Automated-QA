@@ -3,16 +3,20 @@ const fs = require('fs');
 const promisify = require('util').promisify;
 const imageSize = require('image-size');
 const musicMetadata = require('music-metadata');
+const { execSync } = require('child_process');
 
 const { parseSRASConfig } = require('../lib/srasConfig');
 const { formatMsToHRT } = require('../lib/format');
 const { formatHRTFileSize } = require('../lib/format');
 const { isDirectory } = require('../lib/path-validation.js');
 const { isPowerOfTwo } = require('../lib/mathHelpers.js');
+const ffmpegPath = require('ffmpeg-static');
 
 const fsReadDir = promisify(fs.readdir);
 const fsStat = promisify(fs.stat);
 const sizeOf = promisify(imageSize);
+
+// import { LoudnessMeter } from '@domchristie/needles'
 
 /**
  *
@@ -123,8 +127,29 @@ class AssetScanner {
       const maxChannels = scanRules.maxChannels || 0;
       const sampleRate = scanRules.sampleRate || 0;
       const duration = scanRules.duration || 0;
+      const maxLoudness = scanRules.maxLoudness || 0;
 
       const fileName = filePath.split('\\').pop();
+
+      // The command to be passed to ffmpeg. 
+      let ffmpegCommand = ffmpegPath + ` -i ${filePath} -af loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary -f null - 2>&1`;
+      
+      let ffmpegOutputt = execSync(ffmpegCommand, {
+        encoding: 'utf8',
+        stdio: "pipe"
+      });
+      
+      // Use regex to get find the Input Integrated value and get the LUFS value. Parse the value as an Integer. Can output -Inf LUFS which will parse as NaN
+      let fileLoudness = parseInt(ffmpegOutputt.match(/(?<=Input Integrated:)(.*)(?=LUFS)/)[0]);
+      
+      
+      if (maxLoudness < 0 && fileLoudness < maxLoudness) {
+        this.results.reports.push([
+          'Audio file is louder than the recommended loudness',
+          `[recommended = ${maxLoudness} LUFS],`,
+          `[${fileName} = ${fileLoudness} LUFS]`,
+        ].join(' '));
+      }
 
       if (maxSize > 0 && stat.size > maxSize) {
         this.results.reports.push([
