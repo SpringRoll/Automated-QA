@@ -16,7 +16,6 @@ const fsReadDir = promisify(fs.readdir);
 const fsStat = promisify(fs.stat);
 const sizeOf = promisify(imageSize);
 
-// import { LoudnessMeter } from '@domchristie/needles'
 
 /**
  *
