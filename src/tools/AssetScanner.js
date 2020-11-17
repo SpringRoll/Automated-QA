@@ -131,7 +131,9 @@ class AssetScanner {
       const fileName = filePath.split('\\').pop();
 
       // The command to be passed to ffmpeg. 
-      let ffmpegCommand = ffmpegPath + ` -i ${filePath} -af loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary -f null - 2>&1`;
+      let ffmpegCommand = 
+      ffmpegPath + 
+      ` -i ${filePath} -af loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary -f null - 2>&1`;
       
       let ffmpegOutputt = execSync(ffmpegCommand, {
         encoding: 'utf8',
