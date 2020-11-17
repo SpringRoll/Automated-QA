@@ -133,7 +133,8 @@ class AssetScanner {
       // The command to be passed to ffmpeg. 
       let ffmpegCommand = 
       ffmpegPath + 
-      ` -i ${filePath} -af loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary -f null - 2>&1`;
+      ` -i ${filePath} -af loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary` + 
+      ` -f null - 2>&1`;
       
       let ffmpegOutputt = execSync(ffmpegCommand, {
         encoding: 'utf8',
@@ -141,7 +142,9 @@ class AssetScanner {
       });
       
       // Use regex to get find the Input Integrated value and get the LUFS value. Parse the value as an Integer. Can output -Inf LUFS which will parse as NaN
-      let fileLoudness = parseInt(ffmpegOutputt.match(new RegExp('/(?<=Input Integrated:)(.*)(?=LUFS)/'))[0]);
+      let fileLoudness = parseInt(
+        ffmpegOutputt.match(new RegExp('/(?<=Input Integrated:)(.*)(?=LUFS)/'))[0]
+        );
       
       
       if (maxLoudness < 0 && fileLoudness < maxLoudness) {
