@@ -139,7 +139,7 @@ class AssetScanner {
       });
       
       // Use regex to get find the Input Integrated value and get the LUFS value. Parse the value as an Integer. Can output -Inf LUFS which will parse as NaN
-      let fileLoudness = parseInt(ffmpegOutputt.match(/(?<=Input Integrated:)(.*)(?=LUFS)/)[0]);
+      let fileLoudness = parseInt(ffmpegOutputt.match(new RegExp('/(?<=Input Integrated:)(.*)(?=LUFS)/'))[0]);
       
       
       if (maxLoudness < 0 && fileLoudness < maxLoudness) {
