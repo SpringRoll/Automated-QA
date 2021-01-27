@@ -5,11 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.2.0] - 2021-01-27
-- Added loudness checking for audio files
+### Added
+- loudness checking for audio files
 
 ## [1.1.0] - 2020-09-10
 ### Added
-- Added node require support
+- node require support
 
 ## [1.0.3] - 2020-09-10
 ### Changed
