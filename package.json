@@ -1,6 +1,6 @@
 {
   "name": "springroll-automated-qa",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "An automated QA tool for SpringRoll games",
   "main": "src/index.js",
   "bin": {
@@ -23,6 +23,7 @@
     "chai": "4.2.0",
     "commander": "^5.0.0",
     "express": "^4.17.1",
+    "ffmpeg-static": "^4.2.7",
     "glob": "^7.1.6",
     "ignore": "^5.1.4",
     "image-size": "^0.8.3",
