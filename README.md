@@ -84,6 +84,19 @@ npx sras -p path/to/the/deploy/folder --config path/to/scan/rules/config -c 123
 ```
 will make the linter fail with status code 123 if a code style issue is found.
 
+The asset scanner performs the following:
+- A scan of all JavaScript files to check for files larger than the recommended file size.
+- A scan of all images to check for image dimensions larger than the recommended dimensions.
+- A scan of all images to check for image dimensions that are not powers of two.
+- A scan of all images to check for image files larger than the recommended file size.
+- A scan of all audio files to check for files louder than the recommended loudness.
+- A scan of all audio files to check for files larger than the recommended file size.
+- A scan of all audio files to check for files with more than the recommended number of channels.
+- A scan of all audio files to check for files with a sample rate that does not match the recommended sample rate.
+- A scan of all audio files to check for files with a duration larger than the recommended duration.
+- A scan of all files to check for prohibited file types.
+- A scan of all files to check for required file types.
+
 ## Project Structure
 The project contains the following directories:
 
