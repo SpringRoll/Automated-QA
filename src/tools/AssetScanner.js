@@ -4,6 +4,7 @@ const promisify = require('util').promisify;
 const imageSize = require('image-size');
 const musicMetadata = require('music-metadata');
 const { execSync } = require('child_process');
+const quote = require('shell-quote').quote;
 
 const { parseSRASConfig } = require('../lib/srasConfig');
 const { formatMsToHRT } = require('../lib/format');
@@ -130,24 +131,24 @@ class AssetScanner {
 
       const fileName = filePath.split('\\').pop();
 
-      // The command to be passed to ffmpeg. 
-      let ffmpegCommand = 
-      ffmpegPath + 
-      ` -i ${filePath} -af loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary` + 
+      // The command to be passed to ffmpeg.
+      const ffmpegCommand =
+      ffmpegPath +
+      ` -i ${quote([ filePath ])} -af loudnorm=I=-16:dual_mono=true:TP=-1.5:LRA=11:print_format=summary` +
       ` -f null - 2>&1`;
 
-      
-      let ffmpegOutput = execSync(ffmpegCommand, {
+
+      const ffmpegOutput = execSync(ffmpegCommand, {
         encoding: 'utf8',
-        stdio: "pipe"
+        stdio: 'pipe',
       });
 
       // Use regex to get find the Input Integrated value and get the LUFS value. Parse the value as an Integer. Can output -Inf LUFS which will parse as NaN
-      let fileLoudness = parseInt(
-        ffmpegOutput.match(new RegExp('(?<=Input Integrated:)(.*)(?=LUFS)'))[0]
-        );
-      
-      
+      const fileLoudness = parseInt(
+        ffmpegOutput.match(new RegExp('(?<=Input Integrated:)(.*)(?=LUFS)'))[0],
+      );
+
+
       if (maxLoudness < 0 && fileLoudness < maxLoudness) {
         this.results.reports.push([
           'Audio file is louder than the recommended loudness',
