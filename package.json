@@ -23,7 +23,7 @@
     "bellhop-iframe": "^3.2.0",
     "chai": "4.2.0",
     "commander": "^5.0.0",
-    "eslint": "^6.8.0",
+    "eslint": "^8.19",
     "express": "^4.17.1",
     "ffmpeg-static": "^4.2.7",
     "glob": "^7.1.6",
