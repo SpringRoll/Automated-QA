@@ -1,6 +1,6 @@
 {
   "name": "springroll-automated-qa",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "An automated QA tool for SpringRoll games",
   "main": "src/index.js",
   "bin": {
@@ -10,6 +10,7 @@
   },
   "scripts": {
     "lint": "eslint --fix bin/* config/*.js src/**/*.js tests/*.js",
+    "test": "npm run lint",
     "start": "node index.js"
   },
   "keywords": [],
@@ -21,6 +22,7 @@
     "bellhop-iframe": "^3.2.0",
     "chai": "4.2.0",
     "commander": "^5.0.0",
+    "eslint": "^6.8.0",
     "express": "^4.17.1",
     "ffmpeg-static": "^5.1.0",
     "glob": "^7.1.6",
