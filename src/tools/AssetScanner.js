@@ -127,6 +127,7 @@ class AssetScanner {
       const maxChannels = scanRules.maxChannels || 0;
       const sampleRate = scanRules.sampleRate || 0;
       const duration = scanRules.duration || 0;
+      const bitRate = scanRules.bitRate || 0;
       const maxLoudness = scanRules.maxLoudness || 0;
 
       const fileName = filePath.split('\\').pop();
@@ -187,6 +188,15 @@ class AssetScanner {
           'Audio duration is larger than recommended duration',
           `[recommended = ${duration}],`,
           `[${fileName} = ${convertedDuration}]`,
+        ].join(' '));
+      }
+
+      const bitRateKB = Math.floor(metadata.format.bitrate / 1000); // b/s to kb/s
+      if (bitRate > 0 && bitRateKB > bitRate) {
+        this.results.reports.push([
+          'Audio bitrate is larger than recommended bitrate',
+          `[recommended = ${bitRate} kb/s],`,
+          `[${fileName} = ${bitRateKB} kb/s]`,
         ].join(' '));
       }
     } catch (err) {
