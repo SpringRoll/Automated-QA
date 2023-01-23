@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [1.3.0] - unreleased
+## [2.0.0] - unreleased
 
 ### Changed
 
@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added audio bitrate scan to AssetScanner
+- Added node 16 support
+
+### Removed
+
+ - Removed node Node <12 support 
 
 ## [1.2.1] - 2021-09-15
 
