@@ -9,4 +9,8 @@ module.exports = {
   parserOptions: {
       ecmaVersion: 2017,
   },
+  rules: {
+    "multiline-comment-style": ["error", "starred-block"],
+    "spaced-comment": ["error", "always"]
+  }
 };
