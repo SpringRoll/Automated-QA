@@ -8,5 +8,5 @@ module.exports = {
   extends: '@pbs/eslint-config-pbs-kids',
   parserOptions: {
       ecmaVersion: 2017,
-  },
+  }
 };
