@@ -30,6 +30,8 @@
     "default-param-last": 2,
     "no-redeclare": 2,
     "no-duplicate-imports": 2,
-    "no-const-assign": 2
+    "no-const-assign": 2,
+    "multiline-comment-style": ["error", "starred-block"],
+    "spaced-comment": ["error", "always"]
   }
 }
