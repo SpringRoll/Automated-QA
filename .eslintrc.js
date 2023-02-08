@@ -7,6 +7,10 @@ module.exports = {
   },
   extends: '@pbs/eslint-config-pbs-kids',
   parserOptions: {
-      ecmaVersion: 2017,
+    ecmaVersion: 2017,
+  },
+  rules: {
+    'no-console': 'off',
+    'pbs-kids/var-length': 'off',
   },
 };
