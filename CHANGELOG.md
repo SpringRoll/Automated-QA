@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Audio Bitrate check
+- Added new comment syntax rules to eslint rules
 
 ## [1.2.1] - 2021-09-15
 ### Fixed
