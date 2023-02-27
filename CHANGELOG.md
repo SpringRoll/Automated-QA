@@ -13,13 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added audio bitrate scan to AssetScanner
 - Added node 16 support
-- Added comment syntax rules to eslint rules
 
 ### Removed
 
  - Removed node Node <12 support 
+
+ ## [1.3.0] - 2022-02-15
+
+### Added
+
+- Audio Bitrate check
+- Added new comment syntax rules to eslint rules
 
 ## [1.2.1] - 2021-09-15
 
