@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.1] - Unreleased
 
+### Changed
+- Bumped dependencies recommended by dependabot in the package-lock.json
+
 ## [2.1.0] - 2024-03-07
 
 ### Changed
