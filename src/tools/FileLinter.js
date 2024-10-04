@@ -43,7 +43,7 @@ function run(path, config, logResults = false) {
         const column = pad.right(`${message.column}`, 4, ' ');
         const rule = pad.left(`${message.ruleId}`, 25, ' ');
         const paddedMessage = pad.left(`${message.message}`, 50, ' ');
-        results.reports.push(`${lineNumber}:${column} ${rule} ${paddedMessage} ${record.filePath}`);
+        results.reports.push(`${record.filePath} ->${lineNumber}:${column} ${rule} ${paddedMessage}`);
       }
     }
 
