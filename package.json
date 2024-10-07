@@ -4,9 +4,9 @@
   "description": "An automated QA tool for SpringRoll games",
   "main": "src/index.js",
   "bin": {
-    "srac": "bin/srac",
-    "srlint": "bin/srlint",
-    "sras": "bin/sras"
+    "srac": "./bin/srac",
+    "srlint": "./bin/srlint",
+    "sras": "./bin/sras"
   },
   "scripts": {
     "lint": "eslint --fix bin/* config/*.js src/**/*.js tests/*.js",

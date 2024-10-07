@@ -29,6 +29,7 @@ const lintConfig = {
 
 fileLinter.run(gameFullPath, lintConfig, true).then(() => {
   process.exit();
-}).catch(() => {
+}).catch((error) => {
+  console.error(error);
   process.exit(program.exitCode);
 });
