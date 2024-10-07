@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const path = require('path');
 const packageJson = require('../package.json');
 const { program } = require('commander');
 const expandPath = require('../src/lib/expand-path.js');
@@ -20,7 +21,7 @@ if (!isDirectory(gameFullPath)) {
   process.exit(0);
 }
 
-const lintConfig = '../Automated-QA/config/eslint.json';
+const lintConfig = path.resolve(__dirname, '../config/eslint.json');
 
 fileLinter.run(gameFullPath, lintConfig, true).then(() => {
   process.exit();
