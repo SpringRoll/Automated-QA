@@ -21,45 +21,44 @@ let results;
  * @return {Promise} A promise that will resolve once the scan is complete
  */
 async function run(path, config, logResults = false) {
-    results = Object.assign({}, resultDefaults);
-    results.time.start = Date.now();
+  results = Object.assign({}, resultDefaults);
+  results.time.start = Date.now();
 
-    const eslint = new ESLint({
-      overrideConfigFile: config,
+  const eslint = new ESLint({
+    overrideConfigFile: config,
   });
 
+  // resolve the list of files and lint them
+  const eslintIgnorePath = eslintignore.findEslintIgnore(path);
+  const filesToIgnore = eslintIgnorePath === null ? new Set() : eslintignore.expandEslintIgnore(eslintIgnorePath);
+  const filesToLint = eslintignore.expandRootToNonIgnoredFiles(path, filesToIgnore);
+  const report = await eslint.lintFiles(filesToLint);
 
-    // resolve the list of files and lint them
-    const eslintIgnorePath = eslintignore.findEslintIgnore(path);
-    const filesToIgnore = eslintIgnorePath === null ? new Set() : eslintignore.expandEslintIgnore(eslintIgnorePath);
-    const filesToLint = eslintignore.expandRootToNonIgnoredFiles(path, filesToIgnore);
-    const report = await eslint.lintFiles(filesToLint);
-
-    for (const record of report) {
-      if (record.errorCount === 0) {
-        continue;
-      }
-
-      for (const message of record.messages) {
-        const lineNumber = pad.left(`${message.line}`, 4, ' ');
-        const column = pad.right(`${message.column}`, 4, ' ');
-        const rule = pad.left(`${message.ruleId}`, 25, ' ');
-        const paddedMessage = pad.left(`${message.message}`, 50, ' ');
-        results.reports.push(`${record.filePath} ->${lineNumber}:${column} ${rule} ${paddedMessage}`);
-      }
+  for (const record of report) {
+    if (record.errorCount === 0) {
+      continue;
     }
 
-    results.time.end = Date.now();
-
-    if (logResults && results.reports.length > 0) {
-      console.log(results.reports.join('\n'));
+    for (const message of record.messages) {
+      const lineNumber = pad.left(`${message.line}`, 4, ' ');
+      const column = pad.right(`${message.column}`, 4, ' ');
+      const rule = pad.left(`${message.ruleId}`, 25, ' ');
+      const paddedMessage = pad.left(`${message.message}`, 50, ' ');
+      results.reports.push(`${record.filePath} ->${lineNumber}:${column} ${rule} ${paddedMessage}`);
     }
+  }
 
-    if (report.errorCount === 0) {
-      return results;
-    } else {
-      throw results;
-    }
+  results.time.end = Date.now();
+
+  if (logResults && results.reports.length > 0) {
+    console.log(results.reports.join('\n'));
+  }
+
+  if (report.errorCount === 0) {
+    return results;
+  } else {
+    throw results;
+  }
 }
 
 module.exports = { run };
