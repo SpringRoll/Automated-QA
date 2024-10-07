@@ -21,11 +21,14 @@ if (!isDirectory(gameFullPath)) {
   process.exit(0);
 }
 
-const lintConfig = {
+/*const lintConfig = {
   configFile: path.resolve(__dirname, '../config/eslint.json'),
   extensions: [ '.js', '.ts' ],
   useEslintrc: false,
-};
+};*/
+
+const lintConfig = '../Automated-QA/config/eslint.json'
+
 
 fileLinter.run(gameFullPath, lintConfig, true).then(() => {
   process.exit();
