@@ -32,6 +32,15 @@
     "no-duplicate-imports": 2,
     "no-const-assign": 2,
     "multiline-comment-style": ["error", "starred-block"],
-    "spaced-comment": ["error", "always"]
+    "spaced-comment": ["error", "always"],
+    "no-var": 2,
+    "eqeqeq": ["error", "always"],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ForOfStatement",
+        "message": "for...of loops are not allowed."
+      }
+    ]
   }
 }
