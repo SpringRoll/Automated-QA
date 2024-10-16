@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.1.1] - Unreleased
+## [2.2.0] - Unreleased
+- Linter now errors on loose equalities, var for variable definition, and for...of loops [ticket](https://www.pivotaltracker.com/story/show/188211631)
+
+- Updated to work with Node 20 [ticket](https://www.pivotaltracker.com/story/show/188228334)
+
+- Updated MIT liscence text [ticket](https://www.pivotaltracker.com/story/show/188078323)
+
+## [2.1.1] - 2024-05-03
 
 ### Changed
 - Bumped dependencies recommended by dependabot in the package-lock.json
