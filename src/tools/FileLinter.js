@@ -1,4 +1,4 @@
-const { ESLint } = require('eslint');
+const eslint = require('eslint');
 const eslintignore = require('../lib/eslintignore.js');
 const pad = require('../lib/pad.js');
 
@@ -20,21 +20,24 @@ let results;
  * @param {boolean} [logResults=false] Whether or not to log the result to the console
  * @return {Promise} A promise that will resolve once the scan is complete
  */
-async function run(path, config, logResults = false) {
+async function run(path, configPath, logResults = false) {
   results = Object.assign({}, resultDefaults);
   results.time.start = Date.now();
 
-  const eslint = new ESLint({
-    overrideConfigFile: config,
-  });
+  const lintConfig = {
+    configFile: configPath,
+  };
+
+  const cliEngine = new eslint.CLIEngine(lintConfig);
 
   // resolve the list of files and lint them
   const eslintIgnorePath = eslintignore.findEslintIgnore(path);
   const filesToIgnore = eslintIgnorePath === null ? new Set() : eslintignore.expandEslintIgnore(eslintIgnorePath);
   const filesToLint = eslintignore.expandRootToNonIgnoredFiles(path, filesToIgnore);
-  const report = await eslint.lintFiles(filesToLint);
+  const report = cliEngine.executeOnFiles(filesToLint);
 
-  for (const record of report) {
+
+    for (const record of report.results) {
     if (record.errorCount === 0) {
       continue;
     }
