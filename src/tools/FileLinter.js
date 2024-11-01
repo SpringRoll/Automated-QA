@@ -16,7 +16,7 @@ let results;
 
 /**
  * @param {string} path The root path begin the scan in
- * @param {*} config A set of options for scanning
+ * @param {*} configPath A set of options for scanning
  * @param {boolean} [logResults=false] Whether or not to log the result to the console
  * @return {Promise} A promise that will resolve once the scan is complete
  */
@@ -37,7 +37,7 @@ async function run(path, configPath, logResults = false) {
   const report = cliEngine.executeOnFiles(filesToLint);
 
 
-    for (const record of report.results) {
+  for (const record of report.results) {
     if (record.errorCount === 0) {
       continue;
     }
