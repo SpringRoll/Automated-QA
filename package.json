@@ -11,7 +11,7 @@
   "scripts": {
     "lint": "eslint --fix bin/* config/*.js src/**/*.js tests/*.js",
     "test": "npm run lint",
-    "start": "node index.js"
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
