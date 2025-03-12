@@ -55,8 +55,10 @@ async function run(path, config, logResults = false) {
   }
 
   if (report.errorCount === 0) {
+    console.log('error count 0');
     return results;
   } else {
+    console.log('error count not 0', report.errorCount);
     throw results;
   }
 }
