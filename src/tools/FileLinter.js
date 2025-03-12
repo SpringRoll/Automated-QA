@@ -55,10 +55,10 @@ async function run(path, config, logResults = false) {
   }
 
   if (report.errorCount === 0) {
-    console.log('error count 0');
+    console.log(report);
     return results;
   } else {
-    console.log('error count not 0', report.errorCount);
+    console.log('error count not 0', report);
     throw results;
   }
 }
