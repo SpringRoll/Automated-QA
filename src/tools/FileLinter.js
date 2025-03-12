@@ -54,11 +54,11 @@ async function run(path, config, logResults = false) {
     console.log(results.reports.join('\n'));
   }
 
-  if (report.errorCount === 0) {
-    console.log(report);
+  if (results.reports.length === 0) {
+    console.log(results);
     return results;
   } else {
-    console.log('error count not 0', report);
+    console.log('error count not 0', results);
     throw results;
   }
 }
