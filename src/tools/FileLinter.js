@@ -54,7 +54,7 @@ async function run(path, config, logResults = false) {
     console.log(results.reports.join('\n'));
   }
 
-  if (report.errorCount === 0) {
+  if (results.reports.length === 0) {
     return results;
   } else {
     throw results;
