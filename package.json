@@ -3,6 +3,10 @@
   "version": "2.2.2",
   "description": "An automated QA tool for SpringRoll games",
   "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SpringRoll/Automated-QA"
+  },
   "bin": {
     "srac": "./bin/srac",
     "srlint": "./bin/srlint",
