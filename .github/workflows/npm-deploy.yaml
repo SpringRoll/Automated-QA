@@ -4,6 +4,9 @@ on:
   release:
     types: [released]
 
+permissions:
+  id-token: write
+
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
