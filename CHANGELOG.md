@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.2] - 2026-07-16
+
+### Fixed
+
+- Pin `typescript` to `~5.3.3` to keep it compatible with the bundled `@typescript-eslint/parser@5.x`. TypeScript 7.0 was being pulled in transitively on fresh installs, causing every lint run to crash with `TypeError: Failed to load parser '@typescript-eslint/parser' ... Cannot read properties of undefined (reading 'BarBarToken')`. This broke linting across all consuming projects with no code changes on their end.
+
 ## [2.2.1] - 2025-03-13
 
 - Switch error count check in FileLinter.js to properly check for any error reports
