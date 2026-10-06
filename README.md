@@ -21,7 +21,7 @@ The tools currently consist of the following utilities:
 The only external dependency of this library is [Firefox](https://www.mozilla.org/en-US/firefox/) which is ran
 [headless](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode) during a test suite run.
 
-Lastly, you'll need `node` installed (version 10 is preferrable) and `npm`. You then install this via:
+Lastly, you'll need `node` installed (version 26 is preferrable) and `npm`. You then install this via:
 ```
 npm i springroll-automated-qa
 ```
