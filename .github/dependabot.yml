@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    target-branch: "develop"
+    groups:
+      typescript-eslint:
+        patterns:
+          - "@typescript-eslint/*"
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
