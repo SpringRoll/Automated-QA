@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added a Dependabot config to keep npm dependencies up to date on a monthly schedule against `develop`, grouping minor/patch bumps and `@typescript-eslint/*` updates together. [SR-247](https://pbskids.atlassian.net/browse/SR-247)
+
 ## [2.2.2] - 2026-07-16
 
 ### Fixed
