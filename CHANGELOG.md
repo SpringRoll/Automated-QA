@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a Dependabot config to keep npm dependencies up to date on a monthly schedule against `develop`, grouping minor/patch bumps and `@typescript-eslint/*` updates together. [SR-247](https://pbskids.atlassian.net/browse/SR-247)
 
+### Changed
+
+- Dependabot updates ([ticket](https://pbskids.atlassian.net/browse/SR-247)):
+  - brace-expansion from 1.1.11 to 1.1.21
+  - proxy-addr from 2.0.7 to 2.0.8
+  - bellhop-iframe from 3.5.0 to 3.6.0
+  - ffmpeg-static from 5.2.0 to 5.3.0
+  - shell-quote from 1.8.1 to 1.12.0
+  - webpack from 5.95.0 to 5.111.1
+
 ## [2.2.2] - 2026-07-16
 
 ### Fixed
