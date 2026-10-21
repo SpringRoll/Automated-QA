@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Updated to work with Node 26. CI now tests against Node 18, 20, and 26. [ticket](https://pbskids.atlassian.net/browse/SR-246).
+- Updated to work with Node 26. CI now tests against Node 22, 24, and 26. [ticket](https://pbskids.atlassian.net/browse/SR-246).
 
 ## [2.2.2] - 2026-07-16
 
