@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -9,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a Dependabot config to keep npm dependencies up to date on a monthly schedule against `develop`, grouping minor/patch bumps and `@typescript-eslint/*` updates together. [SR-247](https://pbskids.atlassian.net/browse/SR-247)
+
+### Changed
+
+- Updated to work with Node 26. CI now tests against Node 22, 24, and 26. [ticket](https://pbskids.atlassian.net/browse/SR-246).
 
 ## [2.2.2] - 2026-07-16
 
@@ -21,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Switch error count check in FileLinter.js to properly check for any error reports
 
 ## [2.2.0] - 2024-10-16
+
 - Linter now errors on loose equalities, var for variable definition, and for...of loops [ticket](https://www.pivotaltracker.com/story/show/188211631)
 
 - Updated to work with Node 20 [ticket](https://www.pivotaltracker.com/story/show/188228334)
@@ -30,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.1.1] - 2024-05-03
 
 ### Changed
+
 - Bumped dependencies recommended by dependabot in the package-lock.json
 
 ## [2.1.0] - 2024-03-07
@@ -41,7 +48,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Node 18 support
-
 
 ## [2.0.0] - 2023-02-21
 
@@ -55,9 +61,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
- - Removed node Node <12 support 
+- Removed node Node <12 support
 
- ## [1.3.0] - 2022-02-15
+## [1.3.0] - 2022-02-15
 
 ### Added
 
@@ -71,7 +77,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - update scanAudio so that file names with spaces don't break the scan
 - update version of `music-metadata` to fix an error when scanning some files. explanation [here](https://github.com/Borewit/music-metadata/issues/856)
 
-
 ## [1.2.0] - 2021-01-29
 
 ### Added
@@ -79,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - loudness check for audio files
 
 ## [1.1.0] - 2020-09-10
+
 ### Added
 
 - node require support
